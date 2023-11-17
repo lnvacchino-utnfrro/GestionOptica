@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-n=zqw)aplgzf=&ri=ux7qql5i55b+9mtcqt0o+mm6ve&_13)dn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.12','192.168.1.13']
+ALLOWED_HOSTS = ['192.168.1.12','192.168.1.13','127.0.0.1']
 
 
 # Application definition
@@ -57,7 +57,9 @@ ROOT_URLCONF = 'GestionOptica.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/base'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/base'),
+                 os.path.join(BASE_DIR, 'templates/trabajos'),
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db_optica',
         'USER': 'root',
-        'PASSWORD': '100702',
+        'PASSWORD': '100702',#'100702',
         'HOST': 'localhost',
         'PORT': '3306',
     }
