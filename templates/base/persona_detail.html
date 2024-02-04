@@ -1,19 +1,143 @@
 <html>
     <head>
-        <style>
-              li {margin-bottom: 20;}
-          </style>
+        <title>DETALLE PERSONA</title>
+        <meta charset="utf-8">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     </head>
     <body>
-        <h1>{{ persona.apellido }}, {{ persona.nombre }}</h1>
-        <ul>
-            <li>Dirección: <b>{{ persona.direccion }}</b></li>
-            <li>Correo: {{ persona.mail }}</li>
-            <li>Teléfono: {{ persona.tel1 }}</li>
-            <li>Teléfono (2): {% if persona.tel2 %}{{ persona.tel2 }}{% endif %}</li>
-            <li>Obra Social: {{ persona.obra_social }}</li>
-        </ul>
+        <div class="container m-2">
+            <div class="row">
+                <h1>{{ persona.apellido }}, {{ persona.nombre }}</h1>
+            </div>
+        </div>
+        <div class="container m-2">
+            <div class="row">
+                <div class="col-4">
+                    <div class="container">
+                        <div class="row p-2">
+                            <div class="col-4">
+                                <label class="form-label">Domicilio:</label>
+                            </div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.direccion }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div class="col-4">
+                                <label class="form-label">Mail:</label>
+                            </div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.mail }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div class="col-4">
+                                <label class="form-label">Correo:</label>
+                            </div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.mail }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div class="col-4">
+                                <label class="form-label">Teléfono:</label>
+                            </div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.tel1 }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div class="col-4">
+                                <label class="form-label">Teléfono(2):</label>
+                            </div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" aria-label="Disabled input example" value="{% if persona.tel2 %}{{ persona.tel2 }}{% endif %}" readonly>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div class="col-4">
+                                <label class="form-label">Obra Social:</label>
+                            </div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.obra_social }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="container m-2">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Listado de Trabajos</h4>
+                                {% if trabajos %}
+                                    <div class="overflow-auto">
+                                        <table class="table table-striped table-bordered">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Lente</th>
+                                                <th>OD-C</th>
+                                                <th>OD-L</th>
+                                                <th>OI-C</th>
+                                                <th>OI-L</th>
+                                                <th></th>
+                                            </tr>
+                                            {% for trabajo in trabajos %}
+                                                <tr>
+                                                    <td class="col-2">{{ trabajo.fecha_receta|date:'d-m-y' }}</td>
+                                                    <td class="col-2">{{ trabajo.lente }}</td>
+                                                    <td class="col-2">
+                                                        {% if trabajo.od_lejos_esf %}
+                                                        {{ trabajo.od_lejos_esf }}() {{ trabajo.od_lejos_cil }}/{{ trabajo.od_lejos_eje }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="col-2">
+                                                        {% if trabajo.od_cerca_esf %}
+                                                        {{ trabajo.od_cerca_esf }}() {{ trabajo.od_cerca_cil }}/{{ trabajo.od_cerca_eje }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="col-2">
+                                                        {% if trabajo.oi_lejos_esf %}
+                                                        {{ trabajo.oi_lejos_esf }}() {{ trabajo.oi_lejos_cil }}/{{ trabajo.oi_lejos_eje }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="col-2">
+                                                        {% if trabajo.oi_cerca_esf %}
+                                                        {{ trabajo.oi_cerca_esf }}() {{ trabajo.oi_cerca_cil }}/{{ trabajo.oi_cerca_eje }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary" href="{% url 'trabajo-detail-view' trabajo.id %}">Ver</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p>Todavía no tiene trabajos cargados</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container m-2">
+            <div class="row">
+                <div class="col-auto">
+                    <a class="btn btn-primary" href="{% url 'persona-update-view' persona.id %}">Editar</a>
+                </div>
+                <div class="col-auto">
+                    <a class="btn btn-danger" href="{% url 'persona-delete-view' persona.id %}">Borrar</a>  
+                </div>
+                <div class="col-auto">
+                    <a class="btn btn-secondary" href="{% url 'persona-list-view' %}">Volver</a>  
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    
     </body>
-    <button onclick="window.location.href='{% url 'persona-update-view' persona.id %}';">Editar</button>
-    <button onclick="window.location.href='{% url 'persona-delete-view' persona.id %}';">Borrar</button>
 </html>

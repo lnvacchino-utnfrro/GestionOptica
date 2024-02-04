@@ -59,6 +59,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates/base'),
                  os.path.join(BASE_DIR, 'templates/trabajos'),
+                 os.path.join(BASE_DIR, 'templates/utils'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -83,8 +84,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db_optica',
         'USER': 'root',
-        'PASSWORD': '100702',#'100702',
-        'HOST': 'localhost',
+        'PASSWORD': 'admin',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
@@ -125,6 +126,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'GestionOptica/static'))]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
