@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <div class="row">
+      <div class="col">
+        <h1>LISTADO DE TRABAJOS</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p class="col-form-label">Filtros de Búsqueda</p>
+      </div>
+      <div class="col text-end">
+        <a class="btn btn-primary" href="{% url 'trabajo-create-view' %}">Nuevo Trabajo</a>
+      </div>
+    </div>
+    <form action="" method="get">  
+      <div class="row">
+        <div class="col-auto">
+          <label for="fecha" class="col-form-label">Fecha desde:</label>
+        </div>
+        <div class="col-3 col-xl-auto">
+          <input class="form-control" type="date" name="fecha_desde" value={{filtro_fecha_desde}}>
+        </div>
+        <div class="col-auto">
+          <label for="fecha" class="col-form-label">Fecha hasta:</label>
+        </div>
+        <div class="col-3 col-xl-auto">
+          <input class="form-control" type="date" name="fecha_hasta" value={{filtro_fecha_hasta}}>
+        </div>
+        <div class="col-auto">
+          <input class="btn btn-primary" type="submit" value="Filtrar">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded={% if filtro_avanzado %}"true"{% else %}"false"{% endif %} aria-controls="collapseFilter">
+            Más filtros
+          </button>
+        </div>
+        <div class="collapse col-auto {% if filtro_avanzado %}show{% endif %}" id="collapseFilter">
+          <div class="container">
+            <div class="row">
+              <div class="col-auto">
+                <label for="apellido" class="col-form-label">Apellido:</label>
+              </div>
+              <div class="col-2 col-xl-auto">
+                <input class="form-control" type="search" name="apellido" value={{filtro_apellido}}>
+              </div>
+              <div class="col-auto">
+                <label for="nombre" class="col-form-label">Nombre:</label>
+              </div>
+              <div class="col-2 col-xl-auto">
+                <input class="form-control" type="search" name="nombre" value={{filtro_nombre}}>
+              </div>
+              <div class="col-auto">
+                <label for="doctor" class="col-form-label">Doctor:</label>
+              </div>
+              <div class="col-2 col-xl-auto">
+                <input class="form-control" list="doctorDatalistOptions" type="search" name="doctor" value={{filtro_doctor}}>
+                <datalist id="doctorDatalistOptions">
+                  {% for option in form.doctor %}
+                    {{ option }}
+                  {% endfor %}
+                </datalist>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-auto">
+                <label for="lente" class="col-form-label">Lente:</label>
+              </div>
+              <div class="col-2 col-xl-auto">
+                <input class="form-control" list="lenteDatalistOptions" type="search" name="lente" value={{filtro_lente}}>
+                <datalist id="lenteDatalistOptions">
+                  {% for option in form.lente %}
+                    {{ option }}
+                  {% endfor %}
+                </datalist>
+              </div>
+              <div class="col-auto">
+                <label for="tratamiento" class="col-form-label">Tratamiento:</label>
+              </div>
+              <div class="col-2 col-xl-auto">
+                <input class="form-control" list="tratamientoDatalistOptions" type="search" name="tratamiento" value={{filtro_tratamiento}}>
+                <datalist id="tratamientoDatalistOptions">
+                  {% for option in form.tratamiento %}
+                    {{ option }}
+                  {% endfor %}
+                </datalist>
+              </div>
+              <div class="col-auto">
+                <label for="armazon" class="col-form-label">Armazón:</label>
+              </div>
+              <div class="col-2 col-xl-auto">
+                <input class="form-control" list="armazonDatalistOptions" type="search" name="armazon" value={{filtro_armazon}}>
+                <datalist id="armazonDatalistOptions">
+                  {% for option in form.armazon %}
+                    {{ option }}
+                  {% endfor %}
+                </datalist>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-auto">
+                <label for="obra_social" class="col-form-label">Obra Social:</label>
+              </div>
+              <div class="col-2 col-xl-auto">
+                <input class="form-control" list="obraSocialDatalistOptions" type="search" name="obra_social" value={{filtro_obra_social}}>
+                <datalist id="obraSocialDatalistOptions">
+                  {% for option in form.obra_social %}
+                    {{ option }}
+                  {% endfor %}
+                </datalist>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="container m-2">
+      <div class="row">
+          <div class="table-responsive">
+              <table class="table table-striped table-bordered" style="white-space: nowrap; overflow-x: auto;">
+                  <tr>
+                      <th>Fecha</th>
+                      <th>Fecha Alta</th>
+                      <th>Persona</th>
+                      <th>Doctor</th>
+                      <th>OD-Cerca</th>
+                      <th>OD-Lejos</th>
+                      <th>OI-Cerca</th>
+                      <th>OI-Lejos</th>
+                      <th>Lente</th>
+                      <th>Tratamiento</th>
+                      <th>Armazón</th>
+                      <th>Obra Social</th>
+                      <th></th>
+                  </tr>
+                  {% for trabajo in object_list %}
+                      <tr>
+                          <td>{{trabajo.fecha_receta|date:'d-m-Y'}}</td>
+                          <td>{{trabajo.fecha_alta|date:'d-m-Y'}}</td>
+                          <td>{{trabajo.persona}}</td>
+                          <td>{{trabajo.doctor}}</td>
+                          <td>
+                              {% if trabajo.od_lejos_esf %}
+                              {{ trabajo.od_lejos_esf }}() {{ trabajo.od_lejos_cil }}/{{ trabajo.od_lejos_eje }}
+                              {% endif %}
+                          </td>
+                          <td>
+                              {% if trabajo.od_cerca_esf %}
+                              {{ trabajo.od_cerca_esf }}() {{ trabajo.od_cerca_cil }}/{{ trabajo.od_cerca_eje }}
+                              {% endif %}
+                          </td>
+                          <td>
+                              {% if trabajo.oi_lejos_esf %}
+                              {{ trabajo.oi_lejos_esf }}() {{ trabajo.oi_lejos_cil }}/{{ trabajo.oi_lejos_eje }}
+                              {% endif %}
+                          </td>
+                          <td>
+                              {% if trabajo.oi_cerca_esf %}
+                              {{ trabajo.oi_cerca_esf }}() {{ trabajo.oi_cerca_cil }}/{{ trabajo.oi_cerca_eje }}
+                              {% endif %}
+                          </td>
+                          <td>{{trabajo.lente}}</td>
+                          <td>{{trabajo.tratamiento}}</td>
+                          <td>{{trabajo.armazon}}</td>
+                          <td>{{trabajo.obra_social}}</td>
+                          <td>
+                              <a class="btn btn-primary m-1" href="{% url 'trabajo-detail-view' trabajo.id %}">
+                                <i class="bi bi-eye"></i>
+                              </a>
+                              <a class="btn btn-secondary m-1" href="{% url 'trabajo-update-view' trabajo.id %}">
+                                <i class="bi bi-pencil-square"></i>
+                              </a>
+                              <!-- Button trigger modal -->
+                              <button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <i class="bi bi-file-earmark-x"></i>
+                              </button>
+                              <!-- Modal -->
+                              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                              <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <p>¿Está seguro que desea eliminar el trabajo?</p>
+                                          </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                              <form action="{% url 'trabajo-delete-view' trabajo.id %}" method="post">
+                                                  {% csrf_token %}
+                                                  <input class="btn btn-danger" type="submit" value="Borrar">
+                                              </form>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </td>
+                      </tr>
+                    {% empty %} 
+                      <p>No se recuperó ningún trabajo</p>
+                  {% endfor %}
+              </table>
+          </div>
+      </div>
+  </div>
+{% endblock %}

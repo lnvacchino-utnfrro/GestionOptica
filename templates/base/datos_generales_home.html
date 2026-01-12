@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Datos Generales{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h1>
+      DATOS GENERALES
+      <br>
+      <a class="btn btn-primary" href="{% url 'obra-social-list-view' %}" role="button">OBRA SOCIAL</a>
+      <br>
+      <a class="btn btn-primary" href="{% url 'doctor-list-view' %}" role="button">DOCTOR</a>
+      <br>
+      <a class="btn btn-primary" href="{% url 'lente-list-view' %}" role="button">LENTE</a>
+
+    </h1>
+  </div>
+{% endblock %}

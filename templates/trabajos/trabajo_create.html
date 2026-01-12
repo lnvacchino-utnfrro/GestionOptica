@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}CREAR NUEVO TRABAJO{% endblock %}
+
+{% block scc %}
+    <link type='text/css' href="{% static 'css/trabajo_create.css' %}" rel='stylesheet'/>
+    <style type="text/css">  
+        @media (max-width: 1200px) {
+            input[type=number]::-webkit-inner-spin-button, 
+            input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+            }
+            input[type=number] { -moz-appearance:textfield; }
+        }
+        .input-grad {
+            padding: 3px 0 3px 1px;
+        }
+    </style>
+{% endblock %}
+
+{% block js-body %}
+    <script src="{% static 'js/trabajo_create.js' %}"></script>
+{% endblock %}
+        
+{% block content %}
+  <div class="container m-2">
+    {% comment %} {{ request.resolver_match }} {% endcomment %}
+    <h4>CREAR NUEVO TRABAJO</h4>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% comment %} {{ form.management_form }} {% endcomment %}
+        <div class="container m-2">
+            <div class="row">
+                <div class="col-auto">
+                    <label for="fecha_receta" class="form-label">Fecha Receta:</label>
+                </div>
+                <div class="col-auto">
+                    <input id="fecha_receta" type="date" name="fecha_receta" class="form-control" required />
+                </div>
+                <div class="col-auto">
+                    <input id="fecha" type="hidden" name="fecha" class="form-control" value="{{ form.fecha.value|date:'Y-m-d h:m' }}" required readonly></input>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="container m-2">
+            <div class="row justify-content-start p-1">
+                <div class="col-2 col-lg-1">
+                    <label class="form-label" for="persona">Persona:</label>
+                </div>
+                <div class="col-4 col-lg-2">
+                    {% if persona %}
+                        <input class="form-control" type="text" value="{{ persona.apellido }}, {{ persona.nombre }}" aria-label="Disabled input example" disabled readonly>
+                        <a href="{% url 'persona-trabajo-list-view' %}">¿Otro?</a>
+                        <input id="persona" name="persona" value="{{ persona.id }}" hidden="False">
+                    {% else %}
+                        <a href="{% url 'persona-trabajo-list-view' %}">Buscar Persona</a>
+                    {% endif %}
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">Telefono:</label>
+                </div>
+                <div class="col-4 col-lg-2">
+                    <input class="form-control" type="text" value="{{ persona.tel1 }}" aria-label="Disabled input example" disabled readonly>
+                </div>
+            </div>
+            <div class="row justify-content-start p-1">
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">Domicilio:</label>
+                </div>
+                <div class="col-4 col-lg-2">
+                    <input class="form-control" type="text" value="{{ persona.direccion }}" aria-label="Disabled input example" disabled readonly>
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">Celular:</label>
+                </div>
+                <div class="col-4 col-lg-2">
+                    <input class="form-control" type="text" value="{{ persona.tel2 }}" aria-label="Disabled input example" disabled readonly>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="container m-2">
+            <div class="row justify-content-start p-1">
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">Doctor:</label>
+                </div>
+                <div class="col-4 col-lg-2">
+                    <select id="doctor" name="doctor" class="form-select" aria-label="Default select example">
+                        {% for option in form.doctor %}
+                            {{ option }}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="container m-2">
+            <div class="row">
+                <div class="col-9 col-lg-6">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th colspan="1"></th>
+                            <th class="table-active" colspan="3">LEJOS</th>
+                            <th class="table-active" colspan="1">ADD</th>
+                            <th class="table-active" colspan="3">CERCA</th>
+                        </tr>
+                        <tr>
+                            <th class="col-1 table-active">OD</th>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_esf" type="number" name="od_lejos_esf" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_cil" type="number" name="od_lejos_cil" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad" id="od_lejos_eje" type="number" name="od_lejos_eje" min="0" max="180" step="1" value="0"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_add" type="number" name="od_add" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_esf" type="number" name="od_cerca_esf" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_cil" type="number" name="od_cerca_cil" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad" id="od_cerca_eje" type="number" name="od_cerca_eje" min="0" max="180" step="1" value="0"></input></td>
+                        </tr>
+                        <tr>
+                            <th class="col-1 table-active">OI</th>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_esf" type="number" name="oi_lejos_esf" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_cil" type="number" name="oi_lejos_cil" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad" id="oi_lejos_eje" type="number" name="oi_lejos_eje" min="0" max="180" step="1" value="0"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_add" type="number" name="oi_add" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_esf" type="number" name="oi_cerca_esf" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_cil" type="number" name="oi_cerca_cil" step="0.25" value="0.00" onchange="this.value = limitarDecimales(this.value)" lang="en"></input></td>
+                            <td class="col-1"><input class="form-control input-grad" id="oi_cerca_eje" type="number" name="oi_cerca_eje" min="0" max="180" step="1" value="0"></input></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-3 col-lg-4">
+                    <div class="form-floating">
+                        <textarea style="height: 150px;" class="form-control" placeholder="Leave a comment here" id="observacion" name="observacion" rows="10" cols="50"></textarea>
+                        <label for="floatingTextarea">Observaciones</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container m-2">
+            <div class="row">
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">LENTES</label>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">LEJOS:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    <select id="lente_lejos" name="lente_lejos" class="form-select" aria-label="Default select example">
+                        {% for option in form.lente_lejos %}
+                            {{ option }}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-2">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">CERCA:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    <select id="lente_cerca" name="lente_cerca" class="form-select" aria-label="Default select example">
+                        {% for option in form.lente_cerca %}
+                            {{ option }}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-2">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label">TRATAMIENTO:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    <select id="tratamiento" name="tratamiento" class="form-select" aria-label="Default select example">
+                        {% for option in form.tratamiento %}
+                            {{ option }}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-3">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label">ARMAZÓN:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    <select id="armazon" name="armazon" class="form-select" aria-label="Default select example">
+                        {% for option in form.armazon %}
+                            {{ option }}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-3">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label">OBRA SOCIAL:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    <select id="obra_social" name="obra_social" class="form-select" aria-label="Default select example">
+                        {% for option in form.obra_social %}
+                            {{ option }}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-3">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-7 col-lg-5">
+                    <label class="form-label">TOTAL:</label>
+                </div>
+                <div class="col-3">
+                    $0.00
+                </div>
+            </div>
+        </div>
+        <div class="container m-2">
+            <div class="row">
+                <div class="col-auto">
+                    <input class="btn btn-success" type="submit" value="Grabar">
+                </div>
+                <div class="col-auto">
+                    <a class="btn btn-secondary" href="{% url 'trabajo-list-view'%}">Volver</a>
+                </div>
+            </div>
+        </div>
+    </form>
+  </div>
+{% endblock %}
+

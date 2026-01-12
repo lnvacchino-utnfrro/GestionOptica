@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Lente{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h1>{{ lente.descripcion }}</h1>
+    <br>
+    <a href="{% url 'lente-update-view' lente.id %}" class="btn btn-primary">Editar</a>
+    <a href="{% url 'lente-delete-view' lente.id %}" class="btn btn-danger">Borrar</a>
+    <a href="{% url 'lente-list-view' %}" class="btn btn-secondary">Volver</a>
+  </div>
+{% endblock %}

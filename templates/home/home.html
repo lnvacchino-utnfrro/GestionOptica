@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h1>
+      PÁGINA PRINCIPAL
+      <br>
+      <a class="btn btn-primary" href="{% url 'datos-generales-home-view' %}" role="button">Datos Generales</a>
+      <br>
+      <a class="btn btn-primary" href="{% url 'persona-list-view' %}" role="button">Personas</a>
+      <br>
+      <a class="btn btn-primary" href="{% url 'trabajos-home-view' %}" role="button">Trabajos</a>
+    </h1>
+  </div>
+{% endblock %}

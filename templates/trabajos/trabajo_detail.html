@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}VER TRABAJO{% endblock %}
+
+{% block scc %}
+<link type='text/css' href="{% static 'css/trabajo_create.css' %}" rel='stylesheet'/>
+<style type="text/css">  
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+    }
+    input[type=number] { -moz-appearance:textfield; }
+    .input-grad {
+        padding: 3px 0 3px 1px;
+    }
+</style>
+{% endblock %}
+
+{% block js-body %}
+<script src="{% static 'js/trabajo_create.js' %}"></script> 
+{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h4>TRABAJO</h4>
+    <br>
+    <div class="container m-2">
+      <div class="row">
+        <div class="col-auto">
+          <label for="fecha_receta" class="form-label">Fecha Receta:</label>
+        </div>
+        <div class="col-auto">
+          <input id="fecha" type="datetime" name="fecha" class="form-control" value="{{ trabajo.fecha_receta|date:'Y-m-d' }}" required readonly></input>
+        </div>
+        <div class="col-auto">
+          <label for="fecha" class="form-label">Fecha Alta:</label>
+        </div>
+        <div class="col-auto">
+          <input id="fecha" type="datetime" name="fecha" class="form-control" value="{{ trabajo.fecha|date:'Y-m-d h:m' }}" required readonly></input>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="container m-2">
+      <div class="row justify-content-start p-1">
+        <div class="col-2 col-lg-1">
+          <label class="form-label" for="persona">Persona:</label>
+        </div>
+        <div class="col-4 col-lg-2">
+          <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.apellido }}, {{ trabajo.persona.nombre }}" readonly>
+        </div>
+        <div class="col-2 col-lg-1">
+          <label class="form-label">Telefono:</label>
+        </div>
+        <div class="col-4 col-lg-2">
+          <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.tel1 }}" readonly>
+        </div>
+      </div>
+      <div class="row justify-content-start p-1">
+        <div class="col-2 col-lg-1">
+          <label class="form-label">Domicilio:</label>
+        </div>
+        <div class="col-4 col-lg-2">
+          <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.direccion }}" readonly>
+        </div>
+        <div class="col-2 col-lg-1">
+          <label class="form-label">Celular:</label>
+        </div>
+        <div class="col-4 col-lg-2">
+          <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.tel2 }}" readonly>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="container m-2">
+      <div class="row justify-content-start p-1">
+        <div class="col-2 col-lg-1">
+          <label class="form-label">Doctor:</label>
+        </div>
+        <div class="col-4 col-lg-2">
+          <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.doctor }}" readonly>
+        </div>
+      </div>
+    </div>
+    <div class="container m-2">
+        <div class="row">
+            <div class="col-9 col-lg-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <th colspan="1"></th>
+                        <th class="table-active" colspan="3">LEJOS</th>
+                        <th class="table-active" colspan="1">ADD</th>
+                        <th class="table-active" colspan="3">CERCA</th>
+                    </tr>
+                    <tr>
+                        <th class="col-1 table-active">OD</th>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_esf" type="number" name="od_lejos_esf" step="0.25" value="{{ trabajo.od_lejos_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_cil" type="number" name="od_lejos_cil" step="0.25" value="{{ trabajo.od_lejos_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad" id="od_lejos_eje" type="number" name="od_lejos_eje" min="0" max="180" step="1" value="{{ trabajo.od_lejos_eje }}"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_add" type="number" name="od_add" step="0.25" value="{{ trabajo.od_add }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_esf" type="number" name="od_cerca_esf" step="0.25" value="{{ trabajo.od_cerca_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_cil" type="number" name="od_cerca_cil" step="0.25" value="{{ trabajo.od_cerca_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad" id="od_cerca_eje" type="number" name="od_cerca_eje" min="0" max="180" step="1" value="{{ trabajo.od_cerca_eje }}"></td>
+                    </tr>
+                    <tr>
+                        <th class="col-1 table-active">OI</th>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_esf" type="number" name="oi_lejos_esf" step="0.25" value="{{ trabajo.oi_lejos_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_cil" type="number" name="oi_lejos_cil" step="0.25" value="{{ trabajo.oi_lejos_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad" id="oi_lejos_eje" type="number" name="oi_lejos_eje" min="0" max="180" step="1" value="{{ trabajo.oi_lejos_eje }}"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_add" type="number" name="oi_add" step="0.25" value="{{ trabajo.oi_add }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_esf" type="number" name="oi_cerca_esf" step="0.25" value="{{ trabajo.oi_cerca_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_cil" type="number" name="oi_cerca_cil" step="0.25" value="{{ trabajo.oi_cerca_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
+                        <td class="col-1"><input class="form-control input-grad" id="oi_cerca_eje" type="number" name="oi_cerca_eje" min="0" max="180" step="1" value="{{ trabajo.oi_cerca_eje }}"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-3 col-lg-4">
+                <div class="form-floating">
+                    <textarea style="height: 150px;" class="form-control" placeholder="Leave a comment here" id="observacion" name="observacion" rows="10" cols="50">{{ trabajo.observacion|default_if_none:"" }}</textarea>
+                    <label for="floatingTextarea">Observaciones</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container m-2">
+      <div class="row">
+        <div class="col-2 col-lg-1">
+            <label class="form-label">LENTES</label>
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">
+        </div>
+        <div class="col-2 col-lg-1">
+            <label class="form-label">LEJOS:</label>
+        </div>
+        <div class="col-4 col-lg-3">
+          <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.lente_lejos|default_if_none:"" }}" readonly>
+        </div>
+        <div class="col-2">
+            $0.00
+        </div>
+    </div>
+    <div class="row p-1">
+      <div class="col-1">
+      </div>
+      <div class="col-2 col-lg-1">
+          <label class="form-label">CERCA:</label>
+      </div>
+      <div class="col-4 col-lg-3">
+        <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.lente_cerca|default_if_none:"" }}" readonly>
+      </div>
+      <div class="col-2">
+          $0.00
+      </div>
+  </div>
+        <div class="row p-1">
+            <div class="col-3 col-lg-2">
+                <label class="form-label">TRATAMIENTO:</label>
+            </div>
+            <div class="col-4 col-lg-3">
+                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.tratamiento|default_if_none:"" }}" readonly>
+            </div>
+            <div class="col-3">
+                $0.00
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col-3 col-lg-2">
+                <label class="form-label">ARMAZÓN:</label>
+            </div>
+            <div class="col-4 col-lg-3">
+                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.armazon|default_if_none:"" }}" readonly>
+            </div>
+            <div class="col-3">
+                $0.00
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col-3 col-lg-2">
+                <label class="form-label">OBRA SOCIAL:</label>
+            </div>
+            <div class="col-4 col-lg-3">
+                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.obra_social|default_if_none:"" }}" readonly>
+            </div>
+            <div class="col-3">
+                $0.00
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col-7 col-lg-5">
+                <label class="form-label">TOTAL:</label>
+            </div>
+            <div class="col-3">
+                $0.00
+            </div>
+        </div>
+    </div>
+        <div class="container m-2">
+          <div class="row">
+            <div class="col-auto">
+              <a class="btn btn-primary" href="{% url 'trabajo-update-view' trabajo.id %}">Editar</a>
+            </div>
+            <div class="col-auto">
+              <a class="btn btn-secondary" href="{% url 'trabajo-list-view'%}">Volver</a>
+            </div>
+            <div class="col-auto">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Borrar
+              </button>
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <p>¿Está seguro que desea eliminar el trabajo?</p>
+                      </div>
+                      <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <form action="{% url 'trabajo-delete-view' trabajo.id %}" method="post">
+                          {% csrf_token %}
+                          <input class="btn btn-danger" type="submit" value="Borrar">
+                      </form>
+                      </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+  </div>
+  <script>
+    function limitarDecimales(valor) {
+      console.log('AAAAAAAA')
+      let partes = valor.split('.');
+      
+      // Si no hay parte decimal, añadir dos ceros
+      if (partes.length === 1) {
+          return `${partes[0]}.00`;
+      }
+      // Si hay una parte decimal, completar con un cero
+      else if (partes[1].length === 1) {
+          return `${partes[0]}.${partes[1]}0`;
+      }
+      // Si hay más de dos decimales, truncar a dos decimales
+      else if (partes[1].length > 2) {
+          return `${partes[0]}.${partes[1].slice(0, 2)}`;
+      }
+      // Si ya tiene dos decimales, no hacer nada
+      return valor
+  }
+  </script>
+{% endblock %}

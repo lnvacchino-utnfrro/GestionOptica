@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block scc %}
+<link type='text/css' href="{% static 'css/trabajo_create.css' %}" rel='stylesheet'/>
+<style type="text/css">  
+    /* input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+    } */
+    .input-grad {
+        padding: 3px 0 3px 1px;
+    }
+</style>
+{% endblock %}
+
+{% block js-body %}
+<script src="{% static 'js/trabajo_create.js' %}"></script> 
+{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h1>EDITAR TRABAJO</h1>
+    <br>
+      <form action="" method="post">
+          {% csrf_token %}
+          <!-- {{ form.management_form }}
+          {{ form.fecha.errors }}
+          {{ form..errors }}-->
+
+          <input type="number" value="{{ form.trabajo.id }}" hidden="True">
+          <div class="container m-2">
+              <div class="row">
+                  <div class="col-auto">
+                      <label for="fecha_receta" class="form-label">Fecha:</label>
+                  </div>
+                  <div class="col-auto">
+                      <input id="fecha_receta" type="date" name="fecha_receta" class="form-control" value="{{ form.fecha_receta.value|date:'Y-m-d' }}" readonly>
+                  </div>
+                  <div class="col-auto">
+                      <label for="fecha" class="form-label">Fecha Alta:</label>
+                  </div>
+                  <div class="col-auto">
+                      <input id="fecha" type="datetime" name="fecha" class="form-control" value="{{ form.fecha.value|date:'Y-m-d h:m' }}" required readonly></input>
+                  </div>
+              </div>
+          </div>
+          <hr>
+          <div class="container m-2">
+              <div class="row justify-content-start">
+                  <div class="col-2 col-lg-1">
+                      <label class="form-label" for="persona">Persona:</label>
+                  </div>
+                  <div class="col-4 col-lg-2">
+                      <input id="persona" name="persona" value="{{ persona.id }}" hidden="False">
+                      <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.apellido }}, {{ persona.nombre }}" readonly>
+                  </div>
+                  <div class="col-2 col-lg-1">
+                      <label class="form-label">Telefono:</label>
+                  </div>
+                  <div class="col-4 col-lg-2">
+                      <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.tel1 }}" readonly>
+                  </div>
+              </div>
+              <div class="row justify-content-start">
+                  <div class="col-2 col-lg-1">
+                      <label class="form-label">Domicilio:</label>
+                  </div>
+                  <div class="col-4 col-lg-2">
+                      <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.direccion }}" readonly>
+                  </div>
+                  <div class="col-2 col-lg-1">
+                      <label class="form-label">Celular:</label>
+                  </div>
+                  <div class="col-4 col-lg-2">
+                      <input class="form-control" type="text" aria-label="Disabled input example" value="{{ persona.tel2 }}" readonly>
+                  </div>
+              </div>
+          </div>
+          <hr>
+          <div class="container m-2">
+              <div class="row justify-content-start">
+                  <div class="col-2 col-lg-1">
+                      <label class="form-label">Doctor:</label>
+                  </div>
+                  <div class="col-4 col-lg-2">
+                      <select id="doctor" name="doctor" class="form-select" aria-label="Default select example">
+                          {% for option in form.doctor %}
+                              {{ option }}
+                          {% endfor %}
+                      </select>
+                  </div>
+              </div>
+          </div>
+          <div class="container m-2">
+              <div class="row">
+                  <div class="col-9 col-lg-6">
+                      <table class="table table-bordered">
+                          <tr>
+                              <th colspan="1"></th>
+                              <th class="table-active" colspan="3">LEJOS</th>
+                              <th class="table-active" colspan="1">ADD</th>
+                              <th class="table-active" colspan="3">CERCA</th>
+                          </tr>
+                          <tr>
+                              <th class="col-1 table-active">OD</th>
+                              <td class="col-1"><input class="form-control input-grad" id="od_lejos_esf" type="number" name="od_lejos_esf" step="0.25" value="{{ form.od_lejos_esf.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="od_lejos_cil" type="number" name="od_lejos_cil" step="0.25" value="{{ form.od_lejos_cil.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="od_lejos_eje" type="number" name="od_lejos_eje" min="0" max="180" step="1" value="{{ form.od_lejos_eje.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="od_add" type="number" name="od_add" step="0.25" value="{{ form.od_add.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="od_cerca_esf" type="number" name="od_cerca_esf" step="0.25" value="{{ form.od_cerca_esf.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="od_cerca_cil" type="number" name="od_cerca_cil" step="0.25" value="{{ form.od_cerca_cil.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="od_cerca_eje" type="number" name="od_cerca_eje" min="0" max="180" step="1" value="{{ form.od_cerca_eje.value }}"></td>
+                          </tr>
+                          <tr>
+                              <th class="col-1 table-active">OI</th>
+                              <td class="col-1"><input class="form-control input-grad" id="oi_lejos_esf" type="number" name="oi_lejos_esf" step="0.25" value="{{ form.oi_lejos_esf.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="oi_lejos_cil" type="number" name="oi_lejos_cil" step="0.25" value="{{ form.oi_lejos_cil.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="oi_lejos_eje" type="number" name="oi_lejos_eje" min="0" max="180" step="1" value="{{ form.oi_lejos_eje.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="oi_add" type="number" name="oi_add" step="0.25" value="{{ form.oi_add.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="oi_cerca_esf" type="number" name="oi_cerca_esf" step="0.25" value="{{ form.oi_cerca_esf.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="oi_cerca_cil" type="number" name="oi_cerca_cil" step="0.25" value="{{ form.oi_cerca_cil.value }}"></td>
+                              <td class="col-1"><input class="form-control input-grad" id="oi_cerca_eje" type="number" name="oi_cerca_eje" min="0" max="180" step="1" value="{{ form.oi_cerca_eje.value }}"></td>
+                          </tr>
+                      </table>
+                  </div>
+                  <div class="col-3 col-lg-4">
+                      <div class="form-floating">
+                          <textarea style="height: 150px;" class="form-control" placeholder="Leave a comment here" id="observacion" name="observacion" rows="10" cols="50">{{ form.observacion.value }}</textarea>
+                          <label for="floatingTextarea">Observaciones</label>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="container m-2">
+              <div class="row">
+                  <div class="col-3 col-lg-2">
+                      <label class="form-label">LENTE:</label>
+                  </div>
+                  <div class="col-3">
+                      <select id="lente" name="lente" class="form-select" aria-label="Default select example">
+                          {% for option in form.lente %}
+                              {{ option }}
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="col-2">
+                      $0.00
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-3 col-lg-2">
+                      <label class="form-label">TRATAMIENTO:</label>
+                  </div>
+                  <div class="col-3">
+                      <select id="tratamiento" name="tratamiento" class="form-select" aria-label="Default select example">
+                          {% for option in form.tratamiento %}
+                              {{ option }}
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="col-3">
+                      $0.00
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-3 col-lg-2">
+                      <label class="form-label">ARMAZÓN:</label>
+                  </div>
+                  <div class="col-3">
+                      <select id="armazon" name="armazon" class="form-select" aria-label="Default select example">
+                          {% for option in form.armazon %}
+                              {{ option }}
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="col-3">
+                      $0.00
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-3 col-lg-2">
+                      <label class="form-label">OBRA SOCIAL:</label>
+                  </div>
+                  <div class="col-3">
+                      <select id="obra_social" name="obra_social" class="form-select" aria-label="Default select example">
+                          {% for option in form.obra_social %}
+                              {{ option }}
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="col-3">
+                      $0.00
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-6 col-lg-5">
+                      <label class="form-label">TOTAL:</label>
+                  </div>
+                  <div class="col-3">
+                      $0.00
+                  </div>
+              </div>
+          </div>
+          <br>
+          <div class="container m-2">
+              <input class="btn btn-primary" type="submit" value="Guardar">
+              <a class="btn btn-secondary" href="{% url 'trabajo-detail-view' form.instance.id %}">Volver</a>
+          </div>
+      </form>
+  </div>
+{% endblock %}
+        

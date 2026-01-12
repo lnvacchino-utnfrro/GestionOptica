@@ -1,0 +1,12 @@
+<form action="" method="post">{% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <br>
+  <input class="btn btn-success" type="submit" value="Guardar" />
+  {% if request.META.HTTP_REFERER %}
+    <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary">Volver</a>
+  {% else %}
+    <a href="{% url 'datos-generales-home-view' %}" class="btn btn-secondary">Volver</a>
+  {% endif %}
+</form>

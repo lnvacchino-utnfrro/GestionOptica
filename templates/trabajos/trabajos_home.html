@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Trabajos{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h1>
+      TRABAJOS
+      <br>
+      <a class="btn btn-primary" href="{% url 'trabajo-create-view' %}" role="button">REGISTRAR TRABAJO</a>
+      <br>
+      <a class="btn btn-primary" href="{% url 'trabajo-list-view' %}" role="button">LISTADO DE TRABAJOS</a>
+
+    </h1>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% comment %} 
+ESTE TEMPLATE NO ESTA EN USO
+{% endcomment %}
+
+{% extends "base.html" %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <form method="post">{% csrf_token %}
+        <p>¿Está seguro que desea eliminar el trabajo de ?</p>
+        {{ form }}
+        <input type="submit" value="Confirm">
+    </form>
+  </div>
+{% endblock %}

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-n=zqw)aplgzf=&ri=ux7qql5i55b+9mtcqt0o+mm6ve&_13)dn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.12','192.168.1.13']
+ALLOWED_HOSTS = ['192.168.1.12','192.168.1.13','127.0.0.1']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base',
     'trabajos',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,12 @@ ROOT_URLCONF = 'GestionOptica.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/base'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/base'),
+                 os.path.join(BASE_DIR, 'templates/trabajos'),
+                 os.path.join(BASE_DIR, 'templates/utils'),
+                 os.path.join(BASE_DIR, 'templates/home'),
+                 os.path.join(BASE_DIR, 'templates/extends'),
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,8 +87,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db_optica',
         'USER': 'root',
-        'PASSWORD': '100702',
-        'HOST': 'localhost',
+        'PASSWORD': 'admin',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
@@ -123,6 +129,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
