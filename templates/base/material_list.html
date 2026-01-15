@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Material{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <div class="row">
+      <div class="col-4 col-lg-4">
+        <h1>MATERIALES</h1>
+      </div>
+      <div class="col-4 col-lg-3">
+        <a class="btn btn-primary" href="{% url 'material-create-view' %}">Agregar Nuevo Material</a>
+      </div>
+    </div>
+    <div class="col-8 col-lg-6">
+      <table class="table table-striped table-bordered">
+        <tr>
+          <th>Descripción</th>
+          <th></th>
+        </tr>
+        {% for material in object_list %}
+        <tr>
+            <td>{{ material.descripcion }}</td>
+            <td>
+              <a class="btn btn-primary m-1" href="{% url 'material-update-view' material.id %}"> 
+                <i class="bi bi-pencil-square"></i>
+                <span>Modificar</span> 
+              </a> 
+              <a class="btn btn-danger m-1" href="{% url 'material-delete-view' material.id %}"> 
+                <i class="bi bi-file-earmark-x"></i>
+                <span>Borrar</span> 
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+        No hay materiales registradas.
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

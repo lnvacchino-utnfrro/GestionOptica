@@ -7,8 +7,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView, View
 from base.models import *
-from trabajos.forms import TrabajoForm, TrabajoFilterForm
-from trabajos.models import Trabajo
+from trabajos.forms import *
+from trabajos.models import Trabajo, TrabajoLente, TIPO_TRABAJO
 
 class TrabajosHomeView(View):
     template_name = "trabajos_home.html"
@@ -106,18 +106,73 @@ class TrabajoCreateView(View):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial={'fecha': datetime.now()})
+        
+        context = {
+            'form': form,
+            'tipos_trabajo': TIPO_TRABAJO,
+            'formset_lente_cerca': TrabajoLenteCercaFormSet(prefix='cerca'),
+            'formset_lente_lejos': TrabajoLenteLejosFormSet(prefix='lejos'),
+            'formset_lente_unico': TrabajoLenteUnicoFormSet(prefix='unico'),
+            'formset_tratamiento_cerca': TrabajoTratamientoCercaFormSet(prefix='cerca'),
+            'formset_tratamiento_lejos': TrabajoTratamientoLejosFormSet(prefix='lejos'),
+            'formset_tratamiento_unico': TrabajoTratamientoUnicoFormSet(prefix='unico'),
+            'formset_armazon_cerca': TrabajoArmazonCercaFormSet(prefix='cerca'),
+            'formset_armazon_lejos': TrabajoArmazonLejosFormSet(prefix='lejos'),
+            'formset_armazon_unico': TrabajoArmazonUnicoFormSet(prefix='unico'),
+            'formset_material_cerca': TrabajoMaterialCercaFormSet(prefix='cerca'),
+            'formset_material_lejos': TrabajoMaterialLejosFormSet(prefix='lejos'),
+            'formset_material_unico': TrabajoMaterialUnicoFormSet(prefix='unico'),
+        }
+
+        persona = None
         if request.GET.get('id_persona'):
+            # raise (form.errors)
             persona = Persona.objects.get(id=request.GET.get('id_persona'))
-            return render(request, self.template_name, {'form':form, 'persona':persona})
-        return render(request, self.template_name, {'form':form})
+            context['persona'] = persona
+        
+        return render(request, self.template_name, context)
+
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
-        if form.is_valid():
+
+        formset_cerca = TrabajoLenteCercaFormSet(request.POST, prefix='cerca')
+        formset_lejos = TrabajoLenteLejosFormSet(request.POST, prefix='lejos')
+        formset_unico = TrabajoLenteUnicoFormSet(request.POST, prefix='unico')
+
+        if (
+            form.is_valid() and
+            formset_cerca.is_valid() and
+            formset_lejos.is_valid() and
+            formset_unico.is_valid()
+        ):
             trabajo = form.save()
-            return HttpResponseRedirect(reverse("trabajo-detail-view", args=[trabajo.id]))
-        return render(request, self.template_name, {'form':form, 'persona':trabajo.persona})
-    
+
+            for fs in (formset_cerca, formset_lejos, formset_unico):
+                fs.instance = trabajo
+                fs.save()
+
+            return HttpResponseRedirect(
+                reverse("trabajo-detail-view", args=[trabajo.id])
+            )
+
+        return render(
+            request,
+            self.template_name,
+            {
+                'form': form,
+                'formset_cerca': formset_cerca,
+                'formset_lejos': formset_lejos,
+                'formset_unico': formset_unico,
+            }
+        )
+        
+        # form = self.form_class(request.POST)
+        # if form.is_valid():
+        #     trabajo = form.save()
+        #     return HttpResponseRedirect(reverse("trabajo-detail-view", args=[trabajo.id]))
+        # return render(request, self.template_name, {'form':form, 'persona':trabajo.persona})
+
 
 class TrabajoUpdateView(View):
     form_class = TrabajoForm

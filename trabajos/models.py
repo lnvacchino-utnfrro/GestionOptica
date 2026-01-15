@@ -1,10 +1,17 @@
 from django.db import models
 from django.urls import reverse
-from base.models import Lente, Persona, Doctor, LenteTratamiento, Armazon, ObraSocial, Tratamiento
+from base.models import Lente, Persona, Doctor, Armazon, ObraSocial, Tratamiento, Material
 
-TIPO_LENTES = {
-    "MONO": "MONOFOCAL",
-    "BI-MULTI": "BIFOCAL-MULTIFOCAL",
+TIPO_TRABAJO = {
+    "MONO": "Monofocal",
+    "BI": "Bifocal",
+    "MULTI": "Multifocal",
+    "1/2": "Ocupacional"
+}
+TIPO_ANTEOJO = {
+    "UNICO": "UNICO",
+    "LEJOS": "LEJOS",
+    "CERCA": "CERCA",
 }
 
 class Trabajo(models.Model):
@@ -12,18 +19,24 @@ class Trabajo(models.Model):
     detalle = models.CharField(max_length=250, verbose_name='detalle_trabajo',null=True,blank=True)
     fecha = models.DateTimeField(verbose_name='fecha_trabajo')
     tarea = models.CharField(max_length=250,verbose_name='tarea_trabajo',null=True,blank=True,help_text='Tarea o actividad extra realizada sobre el trabajo')
-    tipo_lentes = models.CharField(max_length=25, choices=TIPO_LENTES)
+    tipo_trabajo = models.CharField(max_length=25, choices=TIPO_TRABAJO)
     observacion = models.CharField(max_length=1000,verbose_name='observacion_trabajo',null=True,blank=True)
     # Relaciones de tablas
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE, null=True, verbose_name='persona', related_name='persona_trabajo')
     doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, verbose_name='doctor',related_name='doctor_trabajo')
     fecha_receta = models.DateField(verbose_name='fecha_receta_trabajo',null=True)
-    lente_con_tratamiento = models.ForeignKey(LenteTratamiento, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='lente_con_tratamiento',related_name='lente_con_tratamiento_trabajo')
-    lente_lejos = models.ForeignKey(Lente, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Lente_od', related_name='lente_lejos_trabajo')
-    lente_cerca = models.ForeignKey(Lente, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Lente_oi', related_name='lente_cerca_trabajo')
-    tratamiento = models.ForeignKey(Tratamiento, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Tratamiento', related_name='tratamiento_trabajo')
-    armazon = models.ForeignKey(Armazon,on_delete=models.SET_NULL,null=True, blank=True, verbose_name='armazon',related_name='armazon_trabajo')
+    # lente_con_tratamiento = models.ForeignKey(LenteTratamiento, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='lente_con_tratamiento',related_name='lente_con_tratamiento_trabajo')
+    # lente_lejos = models.ForeignKey(Lente, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Lente_od', related_name='lente_lejos_trabajo')
+    # lente_cerca = models.ForeignKey(Lente, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Lente_oi', related_name='lente_cerca_trabajo')
+    # tratamiento = models.ForeignKey(Tratamiento, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Tratamiento', related_name='tratamiento_trabajo')
+    # armazon = models.ForeignKey(Armazon,on_delete=models.SET_NULL,null=True, blank=True, verbose_name='armazon',related_name='armazon_trabajo')
     obra_social = models.ForeignKey(ObraSocial, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='obra_social',related_name='obra_social_trabajo')
+
+    lentes = models.ManyToManyField(Lente, related_name="trabajo_lente", through="TrabajoLente")
+    tratamientos = models.ManyToManyField(Tratamiento, related_name="trabajo_tratamiento", through="TrabajoTratamiento")
+    armazones = models.ManyToManyField(Armazon, related_name="trabajo_armazon", through="TrabajoArmazon")
+    materiales = models.ManyToManyField(Material, related_name="trabajo_material", through="TrabajoMaterial")
+
     # Detalle de la receta
     od_lejos_esf = models.DecimalField(max_digits=4,decimal_places=2,null=True,blank=True,verbose_name='ojo_derecho_lejos_esferico')
     od_lejos_cil = models.DecimalField(max_digits=4,decimal_places=2,null=True,blank=True,verbose_name='ojo_derecho_lejos_cilindrico')
@@ -51,7 +64,38 @@ class Trabajo(models.Model):
             self.detalle,
             self.fecha
         )
+    
+    def get_tipo_trabajo(self):
+        return TIPO_TRABAJO
+
+    def get_tipo_anteojo(self):
+        return TIPO_ANTEOJO
+    
 
     class Meta:
         verbose_name='Trabajo'
         verbose_name_plural='Trabajos'
+
+
+class TrabajoLente(models.Model):
+    trabajo = models.ForeignKey(Trabajo, on_delete=models.RESTRICT, related_name="TrabajoLente_trabajo", null=False)
+    lente = models.ForeignKey(Lente, on_delete=models.RESTRICT, related_name="TrabajoLente_lente", null=False)
+    tipo = models.CharField(max_length=25, choices=TIPO_ANTEOJO, null=False, blank=False)
+
+
+class TrabajoTratamiento(models.Model):
+    trabajo = models.ForeignKey(Trabajo, on_delete=models.RESTRICT, related_name="TrabajoTratamiento_trabajo", null=False)
+    tratamiento = models.ForeignKey(Tratamiento, on_delete=models.RESTRICT, related_name="TrabajoTratamiento_tratamiento", null=False)
+    tipo = models.CharField(max_length=25, choices=TIPO_ANTEOJO, null=False, blank=False)
+
+
+class TrabajoArmazon(models.Model):
+    trabajo = models.ForeignKey(Trabajo, on_delete=models.RESTRICT, related_name="TrabajoArmazon_trabajo", null=False)
+    armazon = models.ForeignKey(Armazon, on_delete=models.RESTRICT, related_name="TrabajoArmazon_armazon", null=False)
+    tipo = models.CharField(max_length=25, choices=TIPO_ANTEOJO, null=False, blank=False)
+
+
+class TrabajoMaterial(models.Model):
+    trabajo = models.ForeignKey(Trabajo, on_delete=models.RESTRICT, related_name="TrabajoMaterial_trabajo", null=False)
+    material = models.ForeignKey(Material, on_delete=models.RESTRICT, related_name="TrabajoMaterial_armazon", null=False)
+    tipo = models.CharField(max_length=25, choices=TIPO_ANTEOJO, null=False, blank=False)

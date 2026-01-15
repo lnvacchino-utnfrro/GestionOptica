@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Tratamiento{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h1>{{ tratamiento.descripcion }}</h1>
+    <br>
+    <a href="{% url 'tratamiento-update-view' tratamiento.id %}" class="btn btn-primary">Editar</a>
+    <a href="{% url 'tratamiento-delete-view' tratamiento.id %}" class="btn btn-danger">Borrar</a>
+    <a href="{% url 'tratamiento-list-view' %}" class="btn btn-secondary">Volver</a>
+  </div>
+{% endblock %}

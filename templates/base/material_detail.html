@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Material{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <h1>{{ material.descripcion }}</h1>
+    <br>
+    <a href="{% url 'material-update-view' material.id %}" class="btn btn-primary">Editar</a>
+    <a href="{% url 'material-delete-view' material.id %}" class="btn btn-danger">Borrar</a>
+    <a href="{% url 'material-list-view' %}" class="btn btn-secondary">Volver</a>
+  </div>
+{% endblock %}

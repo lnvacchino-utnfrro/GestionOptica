@@ -10,6 +10,7 @@ class ObraSocial(models.Model):
     class Meta:
         verbose_name='Obra Social'
         verbose_name_plural='Obras Sociales'
+        ordering = ["descripcion"]
 
 
 class Persona(models.Model):
@@ -50,22 +51,31 @@ class Doctor(models.Model):
     class Meta:
         verbose_name='Doctor'
         verbose_name_plural='Doctores'
+        ordering = ['apellido','nombre']
 
 
 class Lente(models.Model):
     descripcion = models.CharField(max_length=60, verbose_name='Descripción',null=False,blank=False)
 
+    def __str__(self):
+        return self.descripcion
+
     class Meta:
         verbose_name='Lente'
         verbose_name_plural='Lentes'
+        ordering = ["descripcion"]
 
 
 class Tratamiento(models.Model):
     descripcion = models.CharField(max_length=60, verbose_name='desc_tratamiento',null=False,blank=False)
 
+    def __str__(self):
+        return self.descripcion
+
     class Meta:
         verbose_name='Tratamiento'
         verbose_name_plural='Tratamientos'
+        ordering = ["descripcion"]
 
 
 class LenteTratamiento(models.Model):
@@ -89,6 +99,7 @@ class Proveedor(models.Model):
     class Meta:
         verbose_name='Proveedor'
         verbose_name_plural='Proveedores'
+        ordering = ["descripcion"]
 
 
 class Armazon(models.Model):
@@ -102,3 +113,16 @@ class Armazon(models.Model):
     class Meta:
         verbose_name='Armazon'
         verbose_name_plural='Armazones'
+        ordering = ["descripcion"]
+
+
+class Material(models.Model):
+    descripcion = models.CharField(max_length=60, verbose_name='desc_material',null=False,blank=False)
+
+    def __str__(self):
+        return self.descripcion
+    
+    class Meta:
+        verbose_name='Material'
+        verbose_name_plural='Materiales'
+        ordering = ["descripcion"]

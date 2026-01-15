@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Tratamiento{% endblock %}
+
+{% block content %}
+  <div class="container m-2">
+    <div class="row">
+      <div class="col-4 col-lg-4">
+        <h1>TRATAMIENTO</h1>
+      </div>
+      <div class="col-4 col-lg-3">
+        <a class="btn btn-primary" href="{% url 'tratamiento-create-view' %}">Agregar Nuevo Tratamiento</a>
+      </div>
+    </div>
+    <div class="col-8 col-lg-6">
+      <table class="table table-striped table-bordered">
+        <tr>
+          <th>Descripción</th>
+          <th></th>
+        </tr>
+        {% for tratamiento in object_list %}
+        <tr>
+            <td>{{ tratamiento.descripcion }}</td>
+            <td>
+              <a class="btn btn-primary m-1" href="{% url 'tratamiento-update-view' tratamiento.id %}"> 
+                <i class="bi bi-pencil-square"></i>
+                <span>Modificar</span> 
+              </a> 
+              <a class="btn btn-danger m-1" href="{% url 'tratamiento-delete-view' tratamiento.id %}"> 
+                <i class="bi bi-file-earmark-x"></i>
+                <span>Borrar</span> 
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+        No hay tratamientos registradas.
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

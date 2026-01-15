@@ -5,24 +5,15 @@
 {% block title %}CREAR NUEVO TRABAJO{% endblock %}
 
 {% block scc %}
-    <link type='text/css' href="{% static 'css/trabajo_create.css' %}" rel='stylesheet'/>
-    <style type="text/css">  
-        @media (max-width: 1200px) {
-            input[type=number]::-webkit-inner-spin-button, 
-            input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-            }
-            input[type=number] { -moz-appearance:textfield; }
-        }
-        .input-grad {
-            padding: 3px 0 3px 1px;
-        }
-    </style>
+    <link type='text/css' href="{% static 'css/trabajo_create.css' %}?v=2" rel='stylesheet'/>
+{% endblock %}
+
+{% block js-head %}
+    <script src="{% static 'js/trabajo_create_head.js' %}"></script>
 {% endblock %}
 
 {% block js-body %}
-    <script src="{% static 'js/trabajo_create.js' %}"></script>
+    <script src="{% static 'js/trabajo_create_body.js' %}"></script>
 {% endblock %}
         
 {% block content %}
@@ -31,7 +22,7 @@
     <h4>CREAR NUEVO TRABAJO</h4>
     <form action="" method="post">
         {% csrf_token %}
-        {% comment %} {{ form.management_form }} {% endcomment %}
+        {{ form.management_form }}
         <div class="container m-2">
             <div class="row">
                 <div class="col-auto">
@@ -51,7 +42,7 @@
                 <div class="col-2 col-lg-1">
                     <label class="form-label" for="persona">Persona:</label>
                 </div>
-                <div class="col-4 col-lg-2">
+                <div class="col-4 col-lg-3">
                     {% if persona %}
                         <input class="form-control" type="text" value="{{ persona.apellido }}, {{ persona.nombre }}" aria-label="Disabled input example" disabled readonly>
                         <a href="{% url 'persona-trabajo-list-view' %}">¿Otro?</a>
@@ -63,7 +54,7 @@
                 <div class="col-2 col-lg-1">
                     <label class="form-label">Telefono:</label>
                 </div>
-                <div class="col-4 col-lg-2">
+                <div class="col-4 col-lg-3">
                     <input class="form-control" type="text" value="{{ persona.tel1 }}" aria-label="Disabled input example" disabled readonly>
                 </div>
             </div>
@@ -71,13 +62,13 @@
                 <div class="col-2 col-lg-1">
                     <label class="form-label">Domicilio:</label>
                 </div>
-                <div class="col-4 col-lg-2">
+                <div class="col-4 col-lg-3">
                     <input class="form-control" type="text" value="{{ persona.direccion }}" aria-label="Disabled input example" disabled readonly>
                 </div>
                 <div class="col-2 col-lg-1">
                     <label class="form-label">Celular:</label>
                 </div>
-                <div class="col-4 col-lg-2">
+                <div class="col-4 col-lg-3">
                     <input class="form-control" type="text" value="{{ persona.tel2 }}" aria-label="Disabled input example" disabled readonly>
                 </div>
             </div>
@@ -137,10 +128,27 @@
                 </div>
             </div>
         </div>
+
         <div class="container m-2">
+            <div class="row p-1">
+                <div class="col-auto">
+                    <label class="form-label fw-bold">TIPO TRABAJO:</label>
+                </div>
+                <div class="col-auto">
+                    {% for key,value in tipos_trabajo.items %}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipo_trabajo" id="tipo_trabajo_{{ key }}" value="{{ key }}"  {% if key == "MONO" %}checked{% endif %} required>
+                            <label class="form-check-label" for="tipo_trabajo_{{ key }}">{{ value }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="container m-2" id="grupo-anteojo-monofocal" style="display: none;">
             <div class="row">
                 <div class="col-2 col-lg-1">
-                    <label class="form-label">LENTES</label>
+                    <label class="form-label"><b>LENTES</b></label>
                 </div>
             </div>
             <div class="row p-1">
@@ -150,13 +158,10 @@
                     <label class="form-label">LEJOS:</label>
                 </div>
                 <div class="col-4 col-lg-3">
-                    <select id="lente_lejos" name="lente_lejos" class="form-select" aria-label="Default select example">
-                        {% for option in form.lente_lejos %}
-                            {{ option }}
-                        {% endfor %}
-                    </select>
+                    {{ formset_lente_lejos.management_form }}
+                    {{ formset_lente_lejos.0.lente }}
                 </div>
-                <div class="col-2">
+                <div class="col-5 text-end grupo-monto">
                     $0.00
                 </div>
             </div>
@@ -167,46 +172,147 @@
                     <label class="form-label">CERCA:</label>
                 </div>
                 <div class="col-4 col-lg-3">
-                    <select id="lente_cerca" name="lente_cerca" class="form-select" aria-label="Default select example">
-                        {% for option in form.lente_cerca %}
-                            {{ option }}
-                        {% endfor %}
-                    </select>
+                    {{ formset_lente_cerca.management_form }}
+                    {{ formset_lente_cerca.0.lente }}
                 </div>
-                <div class="col-2">
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 col-lg-1">
+                    <label class="form-label"><b>TRATAMIENTO:</b></label>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">LEJOS:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_tratamiento_cerca.management_form }}
+                    {{ formset_tratamiento_cerca.0.tratamiento }}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">CERCA:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_tratamiento_cerca.management_form }}
+                    {{ formset_tratamiento_cerca.0.tratamiento }}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>ARMAZON:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                </div>
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>MATERIAL:</b></label>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">LEJOS:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_armazon_lejos.management_form }}
+                    {{ formset_armazon_lejos.0.armazon }}
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_material_lejos.management_form }}
+                    {{ formset_material_lejos.0.material }}
+                </div>
+                <div class="col-1 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">CERCA:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_armazon_cerca.management_form }}
+                    {{ formset_armazon_cerca.0.armazon }}
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_material_cerca.management_form }}
+                    {{ formset_material_cerca.0.material }}
+                </div>
+                <div class="col-1 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="container m-2" id="grupo-anteojo-unico" style="display: block;">
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>LENTE:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_lente_unico.management_form }}
+                    {{ formset_lente_unico.0.lente }}
+                </div>
+                <div class="col-5 text-end grupo-monto">
                     $0.00
                 </div>
             </div>
             <div class="row p-1">
                 <div class="col-3 col-lg-2">
-                    <label class="form-label">TRATAMIENTO:</label>
+                    <label class="form-label"><b>TRATAMIENTO:</b></label>
                 </div>
                 <div class="col-4 col-lg-3">
-                    <select id="tratamiento" name="tratamiento" class="form-select" aria-label="Default select example">
-                        {% for option in form.tratamiento %}
-                            {{ option }}
-                        {% endfor %}
-                    </select>
+                    {{ formset_tratamiento_unico.management_form }}
+                    {{ formset_tratamiento_unico.0.tratamiento }}
                 </div>
-                <div class="col-3">
+                <div class="col-5 text-end grupo-monto">
                     $0.00
                 </div>
             </div>
             <div class="row p-1">
                 <div class="col-3 col-lg-2">
-                    <label class="form-label">ARMAZÓN:</label>
+                    <label class="form-label"><b>ARMAZÓN:</b></label>
                 </div>
                 <div class="col-4 col-lg-3">
-                    <select id="armazon" name="armazon" class="form-select" aria-label="Default select example">
-                        {% for option in form.armazon %}
-                            {{ option }}
-                        {% endfor %}
-                    </select>
+                    {{ formset_armazon_unico.management_form }}
+                    {{ formset_armazon_unico.0.armazon }}
                 </div>
-                <div class="col-3">
+                <div class="col-3 col-lg-1">
+                    <label class="form-label"><b>MATERIAL:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ formset_material_unico.management_form }}
+                    {{ formset_material_unico.0.material }}
+                </div>
+                <div class="col-1 text-end grupo-monto">
                     $0.00
                 </div>
             </div>
+        </div>
+        <div class="container m-2">
             <div class="row p-1">
                 <div class="col-3 col-lg-2">
                     <label class="form-label">OBRA SOCIAL:</label>

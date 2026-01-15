@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 
 from trabajos.models import Trabajo
 
-from .models import ObraSocial, Persona, Doctor, Lente
+from .models import ObraSocial, Persona, Doctor, Lente, Tratamiento, Armazon, Material
 
 class DatosGeneralesHomeView(View):
     template_name = "datos_generales_home.html"
@@ -173,3 +173,80 @@ class LenteDeleteView(DeleteView):
     template_name = "lente_confirm_delete.html"
     success_url = reverse_lazy('lente-list-view')
 
+
+# CRUD - TRATAMIENTO
+class TratamientoListView(ListView):
+    model = Tratamiento
+    template_name = "tratamiento_list.html"
+
+
+class TratamientoCreateView(CreateView):
+    model = Tratamiento
+    fields = '__all__'
+    template_name = 'tratamiento_create_form.html'
+    success_url = reverse_lazy('tratamiento-list-view')
+
+
+class TratamientoUpdateView(UpdateView):
+    model = Tratamiento
+    fields = '__all__'
+    template_name = "tratamiento_update_form.html"
+    success_url = reverse_lazy('tratamiento-list-view')
+
+
+class TratamientoDeleteView(DeleteView):
+    model = Tratamiento
+    template_name = "tratamiento_confirm_delete.html"
+    success_url = reverse_lazy('tratamiento-list-view')
+
+
+# CRUD - ARMAZON
+class ArmazonListView(ListView):
+    model = Armazon
+    template_name = "armazon_list.html"
+
+
+class ArmazonCreateView(CreateView):
+    model = Armazon
+    fields = '__all__'
+    template_name = 'armazon_create_form.html'
+    success_url = reverse_lazy('armazon-list-view')
+
+
+class ArmazonUpdateView(UpdateView):
+    model = Armazon
+    fields = '__all__'
+    template_name = "armazon_update_form.html"
+    success_url = reverse_lazy('armazon-list-view')
+
+
+class ArmazonDeleteView(DeleteView):
+    model = Armazon
+    template_name = "armazon_confirm_delete.html"
+    success_url = reverse_lazy('armazon-list-view')
+
+
+# CRUD - MATERIAL
+class MaterialListView(ListView):
+    model = Material
+    template_name = "material_list.html"
+
+
+class MaterialCreateView(CreateView):
+    model = Material
+    fields = '__all__'
+    template_name = 'material_create_form.html'
+    success_url = reverse_lazy('material-list-view')
+
+
+class MaterialUpdateView(UpdateView):
+    model = Material
+    fields = '__all__'
+    template_name = "material_update_form.html"
+    success_url = reverse_lazy('material-list-view')
+
+
+class MaterialDeleteView(DeleteView):
+    model = Material
+    template_name = "material_confirm_delete.html"
+    success_url = reverse_lazy('material-list-view')
