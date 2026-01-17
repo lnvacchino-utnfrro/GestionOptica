@@ -2,13 +2,13 @@ from django.core.paginator import Paginator
 
 from datetime import datetime
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView, View
 from base.models import *
 from trabajos.forms import *
-from trabajos.models import Trabajo, TrabajoLente, TIPO_TRABAJO
+from trabajos.models import TIPO_ANTEOJO, Trabajo, TrabajoLente, TIPO_TRABAJO
 
 class TrabajosHomeView(View):
     template_name = "trabajos_home.html"
@@ -76,7 +76,58 @@ class TrabajoListView(View):
 class TrabajoDetailView(DetailView):
     model = Trabajo
     template_name = "trabajo_detail.html"
-    context_object_name = 'trabajo'
+    context_object_name = "trabajo"
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .select_related(
+                "persona",
+                "doctor",
+                "obra_social",
+            )
+            .prefetch_related(
+                # LENTES
+                "TrabajoLente_trabajo__lente",
+                # TRATAMIENTOS
+                "TrabajoTratamiento_trabajo__tratamiento",
+                # ARMAZONES
+                "TrabajoArmazon_trabajo__armazon",
+                # MATERIALES
+                "TrabajoMaterial_trabajo__material",
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Choices (por si los necesitás en el template)
+        context["tipos_trabajo"] = TIPO_TRABAJO
+        context["tipos_anteojo"] = TIPO_ANTEOJO
+
+        # Alias útiles (opcional, pero mejora legibilidad en template)
+        trabajo = self.object
+
+        context["lente_unico"] = trabajo.lente_unico
+        context["lente_lejos"] = trabajo.lente_lejos
+        context["lente_cerca"] = trabajo.lente_cerca
+
+        context["tratamiento_unico"] = trabajo.tratamiento_unico
+        context["tratamiento_lejos"] = trabajo.tratamiento_lejos
+        context["tratamiento_cerca"] = trabajo.tratamiento_cerca
+
+        context["armazon_unico"] = trabajo.armazon_unico
+        context["armazon_lejos"] = trabajo.armazon_lejos
+        context["armazon_cerca"] = trabajo.armazon_cerca
+
+        context["material_unico"] = trabajo.material_unico
+        context["material_lejos"] = trabajo.material_lejos
+        context["material_cerca"] = trabajo.material_cerca
+
+        return context
+
+    
 
 
 # class TrabajoCreateView(CreateView):
@@ -136,19 +187,40 @@ class TrabajoCreateView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
 
-        formset_cerca = TrabajoLenteCercaFormSet(request.POST, prefix='cerca')
-        formset_lejos = TrabajoLenteLejosFormSet(request.POST, prefix='lejos')
-        formset_unico = TrabajoLenteUnicoFormSet(request.POST, prefix='unico')
+        formset_lente_cerca = TrabajoLenteCercaFormSet(request.POST, prefix='cerca')
+        formset_lente_lejos = TrabajoLenteLejosFormSet(request.POST, prefix='lejos')
+        formset_lente_unico = TrabajoLenteUnicoFormSet(request.POST, prefix='unico')
+        formset_tratamiento_cerca = TrabajoTratamientoCercaFormSet(request.POST, prefix='cerca')
+        formset_tratamiento_lejos = TrabajoTratamientoLejosFormSet(request.POST, prefix='lejos')
+        formset_tratamiento_unico = TrabajoTratamientoUnicoFormSet(request.POST, prefix='unico')
+        formset_armazon_cerca = TrabajoArmazonCercaFormSet(request.POST, prefix='cerca')
+        formset_armazon_lejos = TrabajoArmazonLejosFormSet(request.POST, prefix='lejos')
+        formset_armazon_unico = TrabajoArmazonUnicoFormSet(request.POST, prefix='unico')
+        formset_material_cerca = TrabajoMaterialCercaFormSet(request.POST, prefix='cerca')
+        formset_material_lejos = TrabajoMaterialLejosFormSet(request.POST, prefix='lejos')
+        formset_material_unico = TrabajoMaterialUnicoFormSet(request.POST, prefix='unico')
 
         if (
             form.is_valid() and
-            formset_cerca.is_valid() and
-            formset_lejos.is_valid() and
-            formset_unico.is_valid()
+            formset_lente_cerca.is_valid() and
+            formset_lente_lejos.is_valid() and
+            formset_lente_unico.is_valid() and
+            formset_tratamiento_cerca.is_valid() and
+            formset_tratamiento_lejos.is_valid() and
+            formset_tratamiento_unico.is_valid() and
+            formset_armazon_cerca.is_valid() and
+            formset_armazon_lejos.is_valid() and
+            formset_armazon_unico.is_valid() and
+            formset_material_cerca.is_valid() and
+            formset_material_lejos.is_valid() and
+            formset_material_unico.is_valid()
         ):
             trabajo = form.save()
 
-            for fs in (formset_cerca, formset_lejos, formset_unico):
+            for fs in (formset_lente_cerca, formset_lente_lejos, formset_lente_unico, 
+                       formset_tratamiento_cerca, formset_tratamiento_lejos, formset_tratamiento_unico,
+                       formset_armazon_cerca, formset_armazon_lejos, formset_armazon_unico,
+                       formset_material_cerca, formset_material_lejos, formset_material_unico):
                 fs.instance = trabajo
                 fs.save()
 
@@ -161,9 +233,18 @@ class TrabajoCreateView(View):
             self.template_name,
             {
                 'form': form,
-                'formset_cerca': formset_cerca,
-                'formset_lejos': formset_lejos,
-                'formset_unico': formset_unico,
+                'formset_lente_cerca': formset_lente_cerca,
+                'formset_lente_lejos': formset_lente_lejos,
+                'formset_lente_unico': formset_lente_unico,
+                'formset_tratamiento_cerca': formset_tratamiento_cerca,
+                'formset_tratamiento_lejos': formset_tratamiento_lejos,
+                'formset_tratamiento_unico': formset_tratamiento_unico,
+                'formset_armazon_cerca': formset_armazon_cerca,
+                'formset_armazon_lejos': formset_armazon_lejos,
+                'formset_armazon_unico': formset_armazon_unico,
+                'formset_material_cerca': formset_material_cerca,
+                'formset_material_lejos': formset_material_lejos,
+                'formset_material_unico': formset_material_unico,
             }
         )
         
@@ -175,21 +256,143 @@ class TrabajoCreateView(View):
 
 
 class TrabajoUpdateView(View):
-    form_class = TrabajoForm
     template_name = "trabajo_update.html"
-    
-    def get(self, request, *args, **kwargs):
-        trabajo = Trabajo.objects.get(pk=kwargs['pk'])
-        form = self.form_class(instance=trabajo)
-        return render(request, self.template_name, {'form':form, 'persona':trabajo.persona})
+    form_class = TrabajoForm
 
-    def post(self, request, *args, **kwargs):
-        trabajo = Trabajo.objects.get(pk=kwargs['pk'])
+    def get(self, request, pk):
+        trabajo = get_object_or_404(Trabajo, pk=pk)
+        form = self.form_class(instance=trabajo)
+
+        context = {
+            "form": form,
+            "trabajo": trabajo,
+            "persona": trabajo.persona,
+            "tipos_trabajo": TIPO_TRABAJO,
+
+            "formset_lente_cerca": TrabajoLenteCercaFormSet(
+                instance=trabajo,
+                prefix="lente_cerca",
+                queryset=TrabajoLente.objects.filter(trabajo=trabajo, tipo="CERCA"),
+            ),
+            "formset_lente_lejos": TrabajoLenteLejosFormSet(
+                instance=trabajo,
+                prefix="lente_lejos",
+                queryset=TrabajoLente.objects.filter(trabajo=trabajo, tipo="LEJOS"),
+            ),
+            "formset_lente_unico": TrabajoLenteUnicoFormSet(
+                instance=trabajo,
+                prefix="lente_unico",
+                queryset=TrabajoLente.objects.filter(trabajo=trabajo, tipo="UNICO"),
+            ),
+
+            "formset_tratamiento_cerca": TrabajoTratamientoCercaFormSet(
+                instance=trabajo,
+                prefix="tratamiento_cerca",
+                queryset=TrabajoTratamiento.objects.filter(trabajo=trabajo, tipo="CERCA"),
+            ),
+            "formset_tratamiento_lejos": TrabajoTratamientoLejosFormSet(
+                instance=trabajo,
+                prefix="tratamiento_lejos",
+                queryset=TrabajoTratamiento.objects.filter(trabajo=trabajo, tipo="LEJOS"),
+            ),
+            "formset_tratamiento_unico": TrabajoTratamientoUnicoFormSet(
+                instance=trabajo,
+                prefix="tratamiento_unico",
+                queryset=TrabajoTratamiento.objects.filter(trabajo=trabajo, tipo="UNICO"),
+            ),
+
+            "formset_armazon_cerca": TrabajoArmazonCercaFormSet(
+                instance=trabajo,
+                prefix="armazon_cerca",
+                queryset=TrabajoArmazon.objects.filter(trabajo=trabajo, tipo="CERCA"),
+            ),
+            "formset_armazon_lejos": TrabajoArmazonLejosFormSet(
+                instance=trabajo,
+                prefix="armazon_lejos",
+                queryset=TrabajoArmazon.objects.filter(trabajo=trabajo, tipo="LEJOS"),
+            ),
+            "formset_armazon_unico": TrabajoArmazonUnicoFormSet(
+                instance=trabajo,
+                prefix="armazon_unico",
+                queryset=TrabajoArmazon.objects.filter(trabajo=trabajo, tipo="UNICO"),
+            ),
+
+            "formset_material_cerca": TrabajoMaterialCercaFormSet(
+                instance=trabajo,
+                prefix="material_cerca",
+                queryset=TrabajoMaterial.objects.filter(trabajo=trabajo, tipo="CERCA"),
+            ),
+            "formset_material_lejos": TrabajoMaterialLejosFormSet(
+                instance=trabajo,
+                prefix="material_lejos",
+                queryset=TrabajoMaterial.objects.filter(trabajo=trabajo, tipo="LEJOS"),
+            ),
+            "formset_material_unico": TrabajoMaterialUnicoFormSet(
+                instance=trabajo,
+                prefix="material_unico",
+                queryset=TrabajoMaterial.objects.filter(trabajo=trabajo, tipo="UNICO"),
+            ),
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        trabajo = get_object_or_404(Trabajo, pk=pk)
+
         form = self.form_class(request.POST, instance=trabajo)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("trabajo-detail-view", args=[trabajo.id]))
-        return render(request, self.template_name, {'form':form, 'persona':trabajo.persona})
+
+        formsets = [
+            TrabajoLenteCercaFormSet(request.POST, instance=trabajo, prefix="lente_cerca"),
+            TrabajoLenteLejosFormSet(request.POST, instance=trabajo, prefix="lente_lejos"),
+            TrabajoLenteUnicoFormSet(request.POST, instance=trabajo, prefix="lente_unico"),
+
+            TrabajoTratamientoCercaFormSet(request.POST, instance=trabajo, prefix="tratamiento_cerca"),
+            TrabajoTratamientoLejosFormSet(request.POST, instance=trabajo, prefix="tratamiento_lejos"),
+            TrabajoTratamientoUnicoFormSet(request.POST, instance=trabajo, prefix="tratamiento_unico"),
+
+            TrabajoArmazonCercaFormSet(request.POST, instance=trabajo, prefix="armazon_cerca"),
+            TrabajoArmazonLejosFormSet(request.POST, instance=trabajo, prefix="armazon_lejos"),
+            TrabajoArmazonUnicoFormSet(request.POST, instance=trabajo, prefix="armazon_unico"),
+
+            TrabajoMaterialCercaFormSet(request.POST, instance=trabajo, prefix="material_cerca"),
+            TrabajoMaterialLejosFormSet(request.POST, instance=trabajo, prefix="material_lejos"),
+            TrabajoMaterialUnicoFormSet(request.POST, instance=trabajo, prefix="material_unico"),
+        ]
+
+        if form.is_valid() and all(fs.is_valid() for fs in formsets):
+            trabajo = form.save()
+
+            for fs in formsets:
+                fs.save()
+
+            return HttpResponseRedirect(
+                reverse("trabajo-detail-view", args=[trabajo.id])
+            )
+
+        # si algo falla, vuelve al update
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "trabajo": trabajo,
+                "persona": trabajo.persona,
+                "tipos_trabajo": TIPO_TRABAJO,
+                "formset_lente_cerca": formsets[0],
+                "formset_lente_lejos": formsets[1],
+                "formset_lente_unico": formsets[2],
+                "formset_tratamiento_cerca": formsets[3],
+                "formset_tratamiento_lejos": formsets[4],
+                "formset_tratamiento_unico": formsets[5],
+                "formset_armazon_cerca": formsets[6],
+                "formset_armazon_lejos": formsets[7],
+                "formset_armazon_unico": formsets[8],
+                "formset_material_cerca": formsets[9],
+                "formset_material_lejos": formsets[10],
+                "formset_material_unico": formsets[11],
+            }
+        )
+
 
 
 class TrabajoDeleteView(DeleteView):

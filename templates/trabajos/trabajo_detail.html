@@ -5,22 +5,20 @@
 {% block title %}VER TRABAJO{% endblock %}
 
 {% block scc %}
-<link type='text/css' href="{% static 'css/trabajo_create.css' %}" rel='stylesheet'/>
-<style type="text/css">  
-    input[type=number]::-webkit-inner-spin-button, 
-    input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
-    }
-    input[type=number] { -moz-appearance:textfield; }
-    .input-grad {
-        padding: 3px 0 3px 1px;
-    }
-</style>
+    <link type='text/css' href="{% static 'css/trabajo_create.css' %}?v=2" rel='stylesheet'/>
+    <style>
+        .form-check-input {
+            pointer-events: none;
+        }
+    </style>
+{% endblock %}
+
+{% block js-head %}
+    <script src="{% static 'js/trabajo_create_head.js' %}"></script>
 {% endblock %}
 
 {% block js-body %}
-<script src="{% static 'js/trabajo_create.js' %}"></script> 
+<script src="{% static 'js/trabajo_create_body.js' %}"></script> 
 {% endblock %}
 
 {% block content %}
@@ -49,13 +47,13 @@
         <div class="col-2 col-lg-1">
           <label class="form-label" for="persona">Persona:</label>
         </div>
-        <div class="col-4 col-lg-2">
+        <div class="col-4 col-lg-3">
           <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.apellido }}, {{ trabajo.persona.nombre }}" readonly>
         </div>
         <div class="col-2 col-lg-1">
           <label class="form-label">Telefono:</label>
         </div>
-        <div class="col-4 col-lg-2">
+        <div class="col-4 col-lg-3">
           <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.tel1 }}" readonly>
         </div>
       </div>
@@ -63,13 +61,13 @@
         <div class="col-2 col-lg-1">
           <label class="form-label">Domicilio:</label>
         </div>
-        <div class="col-4 col-lg-2">
+        <div class="col-4 col-lg-3">
           <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.direccion }}" readonly>
         </div>
         <div class="col-2 col-lg-1">
           <label class="form-label">Celular:</label>
         </div>
-        <div class="col-4 col-lg-2">
+        <div class="col-4 col-lg-3">
           <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.persona.tel2 }}" readonly>
         </div>
       </div>
@@ -97,112 +95,249 @@
                     </tr>
                     <tr>
                         <th class="col-1 table-active">OD</th>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_esf" type="number" name="od_lejos_esf" step="0.25" value="{{ trabajo.od_lejos_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_cil" type="number" name="od_lejos_cil" step="0.25" value="{{ trabajo.od_lejos_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad" id="od_lejos_eje" type="number" name="od_lejos_eje" min="0" max="180" step="1" value="{{ trabajo.od_lejos_eje }}"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_add" type="number" name="od_add" step="0.25" value="{{ trabajo.od_add }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_esf" type="number" name="od_cerca_esf" step="0.25" value="{{ trabajo.od_cerca_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_cil" type="number" name="od_cerca_cil" step="0.25" value="{{ trabajo.od_cerca_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad" id="od_cerca_eje" type="number" name="od_cerca_eje" min="0" max="180" step="1" value="{{ trabajo.od_cerca_eje }}"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_esf" type="number" name="od_lejos_esf" step="0.25" value="{{ trabajo.od_lejos_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_lejos_cil" type="number" name="od_lejos_cil" step="0.25" value="{{ trabajo.od_lejos_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad" id="od_lejos_eje" type="number" name="od_lejos_eje" min="0" max="180" step="1" value="{{ trabajo.od_lejos_eje }}" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_add" type="number" name="od_add" step="0.25" value="{{ trabajo.od_add }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_esf" type="number" name="od_cerca_esf" step="0.25" value="{{ trabajo.od_cerca_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="od_cerca_cil" type="number" name="od_cerca_cil" step="0.25" value="{{ trabajo.od_cerca_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad" id="od_cerca_eje" type="number" name="od_cerca_eje" min="0" max="180" step="1" value="{{ trabajo.od_cerca_eje }}" readonly></td>
                     </tr>
                     <tr>
                         <th class="col-1 table-active">OI</th>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_esf" type="number" name="oi_lejos_esf" step="0.25" value="{{ trabajo.oi_lejos_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_cil" type="number" name="oi_lejos_cil" step="0.25" value="{{ trabajo.oi_lejos_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad" id="oi_lejos_eje" type="number" name="oi_lejos_eje" min="0" max="180" step="1" value="{{ trabajo.oi_lejos_eje }}"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_add" type="number" name="oi_add" step="0.25" value="{{ trabajo.oi_add }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_esf" type="number" name="oi_cerca_esf" step="0.25" value="{{ trabajo.oi_cerca_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_cil" type="number" name="oi_cerca_cil" step="0.25" value="{{ trabajo.oi_cerca_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en"></td>
-                        <td class="col-1"><input class="form-control input-grad" id="oi_cerca_eje" type="number" name="oi_cerca_eje" min="0" max="180" step="1" value="{{ trabajo.oi_cerca_eje }}"></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_esf" type="number" name="oi_lejos_esf" step="0.25" value="{{ trabajo.oi_lejos_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_lejos_cil" type="number" name="oi_lejos_cil" step="0.25" value="{{ trabajo.oi_lejos_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad" id="oi_lejos_eje" type="number" name="oi_lejos_eje" min="0" max="180" step="1" value="{{ trabajo.oi_lejos_eje }}" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_add" type="number" name="oi_add" step="0.25" value="{{ trabajo.oi_add }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_esf" type="number" name="oi_cerca_esf" step="0.25" value="{{ trabajo.oi_cerca_esf }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad input-grad-float" id="oi_cerca_cil" type="number" name="oi_cerca_cil" step="0.25" value="{{ trabajo.oi_cerca_cil }}" onload="this.value = limitarDecimales(this.value)" lang="en" readonly></td>
+                        <td class="col-1"><input class="form-control input-grad" id="oi_cerca_eje" type="number" name="oi_cerca_eje" min="0" max="180" step="1" value="{{ trabajo.oi_cerca_eje }}" readonly></td>
                     </tr>
                 </table>
             </div>
             <div class="col-3 col-lg-4">
                 <div class="form-floating">
-                    <textarea style="height: 150px;" class="form-control" placeholder="Leave a comment here" id="observacion" name="observacion" rows="10" cols="50">{{ trabajo.observacion|default_if_none:"" }}</textarea>
+                    <textarea style="height: 150px;" class="form-control" placeholder="Leave a comment here" id="observacion" name="observacion" rows="10" cols="50" readonly>{{ trabajo.observacion|default_if_none:"" }}</textarea>
                     <label for="floatingTextarea">Observaciones</label>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container m-2">
-      <div class="row">
-        <div class="col-2 col-lg-1">
-            <label class="form-label">LENTES</label>
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-1">
-        </div>
-        <div class="col-2 col-lg-1">
-            <label class="form-label">LEJOS:</label>
-        </div>
-        <div class="col-4 col-lg-3">
-          <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.lente_lejos|default_if_none:"" }}" readonly>
-        </div>
-        <div class="col-2">
-            $0.00
-        </div>
-    </div>
-    <div class="row p-1">
-      <div class="col-1">
-      </div>
-      <div class="col-2 col-lg-1">
-          <label class="form-label">CERCA:</label>
-      </div>
-      <div class="col-4 col-lg-3">
-        <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.lente_cerca|default_if_none:"" }}" readonly>
-      </div>
-      <div class="col-2">
-          $0.00
-      </div>
-  </div>
-        <div class="row p-1">
-            <div class="col-3 col-lg-2">
-                <label class="form-label">TRATAMIENTO:</label>
-            </div>
-            <div class="col-4 col-lg-3">
-                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.tratamiento|default_if_none:"" }}" readonly>
-            </div>
-            <div class="col-3">
-                $0.00
-            </div>
-        </div>
-        <div class="row p-1">
-            <div class="col-3 col-lg-2">
-                <label class="form-label">ARMAZÓN:</label>
-            </div>
-            <div class="col-4 col-lg-3">
-                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.armazon|default_if_none:"" }}" readonly>
-            </div>
-            <div class="col-3">
-                $0.00
-            </div>
-        </div>
-        <div class="row p-1">
-            <div class="col-3 col-lg-2">
-                <label class="form-label">OBRA SOCIAL:</label>
-            </div>
-            <div class="col-4 col-lg-3">
-                <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.obra_social|default_if_none:"" }}" readonly>
-            </div>
-            <div class="col-3">
-                $0.00
-            </div>
-        </div>
-        <div class="row p-1">
-            <div class="col-7 col-lg-5">
-                <label class="form-label">TOTAL:</label>
-            </div>
-            <div class="col-3">
-                $0.00
-            </div>
-        </div>
-    </div>
         <div class="container m-2">
+            <div class="row p-1">
+                <div class="col-auto">
+                    <label class="form-label fw-bold">TIPO TRABAJO:</label>
+                </div>
+                <div class="col-auto">
+                    {% for key,value in tipos_trabajo.items %}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipo_trabajo" id="tipo_trabajo_{{ key }}" value="{{ key }}"  {% if key == trabajo.tipo_trabajo %}checked{% else %}disabled{% endif %}>
+                            <label class="form-check-label" for="tipo_trabajo_{{ key }}" aria-readonly="true">{{ value }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="container m-2" id="grupo-anteojo-monofocal" style="display: none;">
+            <div class="row">
+                <div class="col-2 col-lg-1">
+                    <label class="form-label"><b>LENTES</b></label>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">LEJOS:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.lente_lejos %}
+                        {{ trabajo.lente_lejos.lente.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">CERCA:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.lente_cerca %}
+                        {{ trabajo.lente_cerca.lente.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 col-lg-1">
+                    <label class="form-label"><b>TRATAMIENTO:</b></label>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">LEJOS:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.tratamiento_lejos %}
+                        {{ trabajo.tratamiento_lejos.tratamiento.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">CERCA:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.tratamiento_cerca %}
+                        {{ trabajo.tratamiento_cerca.tratamiento.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>ARMAZON:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                </div>
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>MATERIAL:</b></label>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">LEJOS:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.armazon_lejos %}
+                        {{ trabajo.armazon_lejos.armazon.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.material_lejos %}
+                        {{ trabajo.material_lejos.material.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-1 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">
+                </div>
+                <div class="col-2 col-lg-1">
+                    <label class="form-label">CERCA:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.armazon_cerca %}
+                        {{ trabajo.armazon_cerca.armazon.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.material_cerca %}
+                        {{ trabajo.material_cerca.material.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-1 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+        </div>
+        <div class="container m-2" id="grupo-anteojo-unico" style="display: block;">
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>LENTE:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.lente_unico %}
+                        {{ trabajo.lente_unico.lente.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>TRATAMIENTO:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.tratamiento_unico %}
+                        {{ trabajo.tratamiento_unico.tratamiento.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-5 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label"><b>ARMAZÓN:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.armazon_unico %}
+                        {{ trabajo.armazon_unico.armazon.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-3 col-lg-1">
+                    <label class="form-label"><b>MATERIAL:</b></label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {% if trabajo.material_unico %}
+                        {{ trabajo.material_unico.material.descripcion }}
+                    {% endif %}
+                </div>
+                <div class="col-1 text-end grupo-monto">
+                    $0.00
+                </div>
+            </div>
+        </div>
+        <div class="container m-2">
+            <div class="row p-1">
+                <div class="col-3 col-lg-2">
+                    <label class="form-label">OBRA SOCIAL:</label>
+                </div>
+                <div class="col-4 col-lg-3">
+                    {{ trabajo.obra_social }}
+                </div>
+                <div class="col-3">
+                    $0.00
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-7 col-lg-5">
+                    <label class="form-label">TOTAL:</label>
+                </div>
+                <div class="col-3">
+                    $0.00
+                </div>
+            </div>
+        </div>
+         <div class="container m-2">
           <div class="row">
             <div class="col-auto">
-              <a class="btn btn-primary" href="{% url 'trabajo-update-view' trabajo.id %}">Editar</a>
+              <a class="btn btn-primary" href="{% url 'trabajo-update-view' view.kwargs.pk %}">Editar</a>
             </div>
             <div class="col-auto">
               <a class="btn btn-secondary" href="{% url 'trabajo-list-view'%}">Volver</a>
@@ -236,9 +371,8 @@
         </div>
     </div>
   </div>
-  <script>
+  {% comment %} <script>
     function limitarDecimales(valor) {
-      console.log('AAAAAAAA')
       let partes = valor.split('.');
       
       // Si no hay parte decimal, añadir dos ceros
@@ -256,5 +390,5 @@
       // Si ya tiene dos decimales, no hacer nada
       return valor
   }
-  </script>
+  </script> {% endcomment %}
 {% endblock %}

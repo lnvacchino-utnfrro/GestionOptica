@@ -8,6 +8,7 @@ TIPO_TRABAJO = {
     "MULTI": "Multifocal",
     "1/2": "Ocupacional"
 }
+
 TIPO_ANTEOJO = {
     "UNICO": "UNICO",
     "LEJOS": "LEJOS",
@@ -58,11 +59,9 @@ class Trabajo(models.Model):
         return reverse('trabajo-detail-view', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return "TRABAJO DE %s, %s - %s - FECHA: %d/%m/%y" % (
-            self.persona.apellido,
-            self.persona.nombre,
-            self.detalle,
-            self.fecha
+        return (
+            f"TRABAJO DE {self.persona.apellido}, {self.persona.nombre} - "
+            f"{self.detalle} - FECHA: {self.fecha:%d/%m/%y}"
         )
     
     def get_tipo_trabajo(self):
@@ -70,7 +69,114 @@ class Trabajo(models.Model):
 
     def get_tipo_anteojo(self):
         return TIPO_ANTEOJO
+
+    @property
+    def lente_unico(self):
+        return (
+            self.TrabajoLente_trabajo
+            .select_related("lente")
+            .filter(tipo="UNICO")
+            .first()
+        )
+        
+    @property
+    def lente_lejos(self):
+        return (
+            self.TrabajoLente_trabajo
+            .select_related("lente")
+            .filter(tipo="LEJOS")
+            .first()
+        )
+        
+    @property
+    def lente_cerca(self):
+        return (
+            self.TrabajoLente_trabajo
+            .select_related("lente")
+            .filter(tipo="CERCA")
+            .first()
+        )
+
+    @property
+    def tratamiento_unico(self):
+        return (
+            self.TrabajoTratamiento_trabajo
+            .select_related("tratamiento")
+            .filter(tipo="UNICO")
+            .first()
+        )
+        
+    @property
+    def tratamiento_lejos(self):
+        return (
+            self.TrabajoTratamiento_trabajo
+            .select_related("tratamiento")
+            .filter(tipo="LEJOS")
+            .first()
+        )
+        
+    @property
+    def tratamiento_cerca(self):
+        return (
+            self.TrabajoTratamiento_trabajo
+            .select_related("tratamiento")
+            .filter(tipo="CERCA")
+            .first()
+        )
     
+    @property
+    def armazon_unico(self):
+        return (
+            self.TrabajoArmazon_trabajo
+            .select_related("armazon")
+            .filter(tipo="UNICO")
+            .first()
+        )
+        
+    @property
+    def armazon_lejos(self):
+        return (
+            self.TrabajoArmazon_trabajo
+            .select_related("armazon")
+            .filter(tipo="LEJOS")
+            .first()
+        )
+        
+    @property
+    def armazon_cerca(self):
+        return (
+            self.TrabajoArmazon_trabajo
+            .select_related("armazon")
+            .filter(tipo="CERCA")
+            .first()
+        )
+    
+    @property
+    def material_unico(self):
+        return (
+            self.TrabajoMaterial_trabajo
+            .select_related("material")
+            .filter(tipo="UNICO")
+            .first()
+        )
+        
+    @property
+    def material_lejos(self):
+        return (
+            self.TrabajoMaterial_trabajo
+            .select_related("material")
+            .filter(tipo="LEJOS")
+            .first()
+        )
+        
+    @property
+    def material_cerca(self):
+        return (
+            self.TrabajoMaterial_trabajo
+            .select_related("material")
+            .filter(tipo="CERCA")
+            .first()
+        )
 
     class Meta:
         verbose_name='Trabajo'
@@ -80,7 +186,7 @@ class Trabajo(models.Model):
 class TrabajoLente(models.Model):
     trabajo = models.ForeignKey(Trabajo, on_delete=models.RESTRICT, related_name="TrabajoLente_trabajo", null=False)
     lente = models.ForeignKey(Lente, on_delete=models.RESTRICT, related_name="TrabajoLente_lente", null=False)
-    tipo = models.CharField(max_length=25, choices=TIPO_ANTEOJO, null=False, blank=False)
+    tipo = models.CharField(max_length=25, choices=TIPO_ANTEOJO, null=False, blank=False, verbose_name="tipo_lente")
 
 
 class TrabajoTratamiento(models.Model):
