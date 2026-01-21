@@ -2,18 +2,18 @@ from django.db import models
 from django.urls import reverse
 from base.models import Lente, Persona, Doctor, Armazon, ObraSocial, Tratamiento, Material
 
-TIPO_TRABAJO = {
-    "MONO": "Monofocal",
-    "BI": "Bifocal",
-    "MULTI": "Multifocal",
-    "1/2": "Ocupacional"
-}
+TIPO_TRABAJO = (
+    ("MONO", "Monofocal"),
+    ("BI", "Bifocal"),
+    ("MULTI", "Multifocal"),
+    ("1/2", "Ocupacional"),
+)
 
-TIPO_ANTEOJO = {
-    "UNICO": "UNICO",
-    "LEJOS": "LEJOS",
-    "CERCA": "CERCA",
-}
+TIPO_ANTEOJO = (
+    ("UNICO", "UNICO"),
+    ("LEJOS", "LEJOS"),
+    ("CERCA", "CERCA"),
+)
 
 class Trabajo(models.Model):
     # Datos propios del trabajo
