@@ -26,13 +26,13 @@
         <div class="container m-2">
             <div class="row">
                 <div class="col-auto">
-                    <label for="fecha_receta" class="form-label">Fecha Receta:</label>
+                    <label for="fecha_trabajo" class="form-label">Fecha:</label>
                 </div>
                 <div class="col-auto">
-                    <input id="fecha_receta" type="date" name="fecha_receta" class="form-control" required />
+                    <input id="fecha_trabajo" type="date" name="fecha_trabajo" class="form-control" value="{{ form.fecha_trabajo.value|date:'Y-m-d' }}" required />
                 </div>
                 <div class="col-auto">
-                    <input id="fecha" type="hidden" name="fecha" class="form-control" value="{{ form.fecha.value|date:'Y-m-d h:m' }}" required readonly></input>
+                    <input id="fecha_alta" type="hidden" name="fecha_alta" class="form-control" value="{{ form.fecha_alta.value|date:'Y-m-d H:i' }}">
                 </div>
             </div>
         </div>
@@ -85,6 +85,13 @@
                             {{ option }}
                         {% endfor %}
                     </select>
+                </div>
+                <div class="col-1 col-lg-1"></div>
+                <div class="col-3 col-lg-2">
+                    <label class="form-label">Fecha Receta:</label>
+                </div>
+                <div class="col-4 col-lg-2">
+                    <input id="fecha_receta" type="date" name="fecha_receta" class="form-control" />
                 </div>
             </div>
         </div>

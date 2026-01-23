@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.urls import reverse
 from base.models import Lente, Persona, Doctor, Armazon, ObraSocial, Tratamiento, Material
 
@@ -18,14 +19,15 @@ TIPO_ANTEOJO = (
 class Trabajo(models.Model):
     # Datos propios del trabajo
     detalle = models.CharField(max_length=250, verbose_name='detalle_trabajo',null=True,blank=True)
-    fecha = models.DateTimeField(verbose_name='fecha_trabajo')
+    fecha_alta = models.DateTimeField(verbose_name='fecha_alta', default=timezone.now)
+    fecha_trabajo = models.DateField(verbose_name='fecha_trabajo')
     tarea = models.CharField(max_length=250,verbose_name='tarea_trabajo',null=True,blank=True,help_text='Tarea o actividad extra realizada sobre el trabajo')
     tipo_trabajo = models.CharField(max_length=25, choices=TIPO_TRABAJO)
     observacion = models.CharField(max_length=1000,verbose_name='observacion_trabajo',null=True,blank=True)
     # Relaciones de tablas
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE, null=True, verbose_name='persona', related_name='persona_trabajo')
     doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, verbose_name='doctor',related_name='doctor_trabajo')
-    fecha_receta = models.DateField(verbose_name='fecha_receta_trabajo',null=True)
+    fecha_receta = models.DateField(verbose_name='fecha_receta',null=True)
     # lente_con_tratamiento = models.ForeignKey(LenteTratamiento, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='lente_con_tratamiento',related_name='lente_con_tratamiento_trabajo')
     # lente_lejos = models.ForeignKey(Lente, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Lente_od', related_name='lente_lejos_trabajo')
     # lente_cerca = models.ForeignKey(Lente, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Lente_oi', related_name='lente_cerca_trabajo')
@@ -61,7 +63,7 @@ class Trabajo(models.Model):
     def __str__(self):
         return (
             f"TRABAJO DE {self.persona.apellido}, {self.persona.nombre} - "
-            f"{self.detalle} - FECHA: {self.fecha:%d/%m/%y}"
+            f"{self.detalle} - FECHA: {self.fecha_trabajo:%d/%m/%y}"
         )
     
     def get_tipo_trabajo(self):

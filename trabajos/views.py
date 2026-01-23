@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 
-from datetime import datetime
+import datetime
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
@@ -27,10 +27,10 @@ class TrabajoListView(View):
         filtro_avanzado = False
         context = {'form':form}
         if request.GET.get('fecha_desde'):
-            trabajos = Trabajo.objects.filter(fecha_receta__gt=request.GET.get('fecha_desde'))
+            trabajos = Trabajo.objects.filter(fecha_trabajo__gt=request.GET.get('fecha_desde'))
             context['filtro_fecha_desde'] = request.GET.get('fecha_desde')
         if request.GET.get('fecha_hasta'):
-            trabajos = Trabajo.objects.filter(fecha_receta__lt=request.GET.get('fecha_hasta'))
+            trabajos = Trabajo.objects.filter(fecha_trabajo__lt=request.GET.get('fecha_hasta'))
             context['filtro_fecha_hasta'] = request.GET.get('fecha_hasta')
         if request.GET.get('apellido'):
             trabajos = Trabajo.objects.filter(persona__in=Persona.objects.filter(apellido__icontains=request.GET.get('apellido')))
@@ -156,7 +156,8 @@ class TrabajoCreateView(View):
     template_name = "trabajo_create.html"
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class(initial={'fecha': datetime.now()})
+        form = self.form_class(initial={'fecha_alta': datetime.datetime.now()})
+        form = self.form_class(initial={'fecha_trabajo': datetime.date.today()})
         
         context = {
             'form': form,
@@ -200,6 +201,22 @@ class TrabajoCreateView(View):
         formset_material_lejos = TrabajoMaterialLejosFormSet(request.POST, prefix='lejos')
         formset_material_unico = TrabajoMaterialUnicoFormSet(request.POST, prefix='unico')
 
+        print("VALIDACIÓN Nº01",form.is_valid() )
+        print("VALIDACIÓN Nº02",formset_lente_cerca.is_valid() )
+        print("VALIDACIÓN Nº03",formset_lente_lejos.is_valid() )
+        print("VALIDACIÓN Nº04",formset_lente_unico.is_valid() )
+        print("VALIDACIÓN Nº05",formset_tratamiento_cerca.is_valid() )
+        print("VALIDACIÓN Nº06",formset_tratamiento_lejos.is_valid() )
+        print("VALIDACIÓN Nº07",formset_tratamiento_unico.is_valid() )
+        print("VALIDACIÓN Nº08",formset_armazon_cerca.is_valid() )
+        print("VALIDACIÓN Nº09",formset_armazon_lejos.is_valid() )
+        print("VALIDACIÓN Nº10",formset_armazon_unico.is_valid() )
+        print("VALIDACIÓN Nº11",formset_material_cerca.is_valid() )
+        print("VALIDACIÓN Nº12",formset_material_lejos.is_valid() )
+        print("VALIDACIÓN Nº13",formset_material_unico.is_valid())
+
+        print("ESTO ES EL ERROR\n",form.errors)
+
         if (
             form.is_valid() and
             formset_lente_cerca.is_valid() and
@@ -215,6 +232,7 @@ class TrabajoCreateView(View):
             formset_material_lejos.is_valid() and
             formset_material_unico.is_valid()
         ):
+            print("Entró al GRABAR")
             trabajo = form.save()
 
             for fs in (formset_lente_cerca, formset_lente_lejos, formset_lente_unico, 
@@ -228,6 +246,7 @@ class TrabajoCreateView(View):
                 reverse("trabajo-detail-view", args=[trabajo.id])
             )
 
+        print("NOOOOO")
         return render(
             request,
             self.template_name,

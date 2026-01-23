@@ -27,19 +27,19 @@
         <div class="container m-2">
             <div class="row">
                 <div class="col-auto">
-                    <label class="form-label">Fecha Receta:</label>
+                    <label class="form-label">Fecha:</label>
                 </div>
                 <div class="col-auto">
                     <input type="date"
-                           name="fecha_receta"
+                           name="fecha_trabajo"
                            class="form-control"
-                           value="{{ form.fecha_receta.value|date:'Y-m-d' }}"
+                           value="{{ form.fecha_trabajo.value|date:'Y-m-d' }}"
                            required>
                 </div>
                 <div class="col-auto">
                     <input type="hidden"
-                           name="fecha"
-                           value="{{ form.fecha.value|date:'Y-m-d H:i' }}">
+                           name="fecha_alta"
+                           value="{{ form.fecha_alta.value|date:'Y-m-d H:i' }}">
                 </div>
             </div>
         </div>

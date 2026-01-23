@@ -28,16 +28,16 @@
     <div class="container m-2">
       <div class="row">
         <div class="col-auto">
-          <label for="fecha_receta" class="form-label">Fecha Receta:</label>
+          <label for="fecha_trabajo" class="form-label">Fecha:</label>
         </div>
         <div class="col-auto">
-          <input id="fecha" type="datetime" name="fecha" class="form-control" value="{{ trabajo.fecha_receta|date:'Y-m-d' }}" required readonly></input>
+          <input id="fecha_trabajo" type="datetime" name="fecha_trabajo" class="form-control" value="{{ trabajo.fecha_trabajo|date:'Y-m-d' }}" required readonly></input>
         </div>
         <div class="col-auto">
-          <label for="fecha" class="form-label">Fecha Alta:</label>
+          <label for="fecha_alta" class="form-label">Fecha Alta:</label>
         </div>
         <div class="col-auto">
-          <input id="fecha" type="datetime" name="fecha" class="form-control" value="{{ trabajo.fecha|date:'Y-m-d h:m' }}" required readonly></input>
+          <input id="fecha_alta" type="datetime" name="fecha_alta" class="form-control" value="{{ trabajo.fecha_alta|date:'Y-m-d h:m' }}" required readonly></input>
         </div>
       </div>
     </div>
@@ -80,6 +80,13 @@
         </div>
         <div class="col-4 col-lg-2">
           <input class="form-control" type="text" aria-label="Disabled input example" value="{{ trabajo.doctor }}" readonly>
+        </div>
+        <div class="col-1 col-lg-1"></div>
+        <div class="col-3 col-lg-2">
+            <label class="form-label">Fecha Receta:</label>
+        </div>
+        <div class="col-4 col-lg-2">
+            <input id="fecha_receta" type="date" name="fecha_receta" class="form-control" value="{{ trabajo.fecha_receta|date:'Y-m-d' }}" readonly/>
         </div>
       </div>
     </div>
